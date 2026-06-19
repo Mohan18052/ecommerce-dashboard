@@ -1,4 +1,4 @@
-Today's Progress
+two days Progress
 Project Setup
 ✅ Created React 18 application using Vite
 ✅ Configured project structure according to assignment requirements
