@@ -1,0 +1,59 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Alice",
+      "email": "alice@example.com",
+      "role": "admin"
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+      "email": "bob@example.com",
+      "role": "user"
+    },
+    {
+      "id": 3,
+      "name": "Mohan",
+      "email": "mohan@gmail.com",
+      "password": "Moh@n18052005"
+    },
+    {
+      "id": 4,
+      "name": "Mohan1",
+      "email": "mohan@gmail.com",
+      "password": "Moh@n18052005"
+    }
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "userId": 1,
+      "title": "First post",
+      "published": true
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "title": "Second post",
+      "published": false
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "postId": 1,
+      "body": "Nice!"
+    }
+  ],
+  "profile": {
+    "name": "Demo App",
+    "version": "1.0.0"
+  },
+  "candy": {
+    "id": 1,
+    "name": "Chocolate Bar",
+    "flavor": "Chocolate",
+    "price": 1.99
+  }
+}
