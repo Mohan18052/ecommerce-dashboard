@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 function Register() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,7 +20,36 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.password.trim()
+    ) {
+      alert("All fields are required");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      alert("Password must be at least 6 characters");
+      return;
+    }
+
     try {
+      const usersResponse = await fetch(
+        "http://localhost:4000/users"
+      );
+
+      const users = await usersResponse.json();
+
+      const existingUser = users.find(
+        (user) => user.email === formData.email
+      );
+
+      if (existingUser) {
+        alert("Email already exists");
+        return;
+      }
+
       const response = await fetch(
         "http://localhost:4000/users",
         {
@@ -29,13 +61,16 @@ function Register() {
         }
       );
 
-      const data = await response.json();
-
-      console.log("Registered User:", data);
+      if (!response.ok) {
+        throw new Error("Registration failed");
+      }
 
       alert("Registration Successful");
+
+      navigate("/login");
     } catch (error) {
       console.error(error);
+      alert("Something went wrong");
     }
   };
 
@@ -48,6 +83,7 @@ function Register() {
           type="text"
           name="name"
           placeholder="Enter Name"
+          value={formData.name}
           onChange={handleChange}
         />
 
@@ -58,6 +94,7 @@ function Register() {
           type="email"
           name="email"
           placeholder="Enter Email"
+          value={formData.email}
           onChange={handleChange}
         />
 
@@ -68,6 +105,7 @@ function Register() {
           type="password"
           name="password"
           placeholder="Enter Password"
+          value={formData.password}
           onChange={handleChange}
         />
 
@@ -77,6 +115,13 @@ function Register() {
         <button type="submit">
           Register
         </button>
+
+        <br />
+        <br />
+
+        <Link to="/login">
+          Back To Login
+        </Link>
       </form>
     </div>
   );

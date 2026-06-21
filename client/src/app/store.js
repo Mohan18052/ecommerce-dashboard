@@ -1,11 +1,35 @@
 import { configureStore } from "@reduxjs/toolkit";
 
+import {
+  persistStore,
+  persistReducer,
+} from "redux-persist";
+
+import storageModule from "redux-persist/lib/storage";
+
 import rootReducer from "./rootReducer";
 import { baseApi } from "../services/baseApi";
 
+const storage = storageModule.default;
+
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: [
+    "auth",
+    "wishlist",
+    "theme",
+  ],
+};
+
+const persistedReducer = persistReducer(
+  persistConfig,
+  rootReducer
+);
+
 export const store = configureStore({
   reducer: {
-    root: rootReducer,
+    root: persistedReducer,
     [baseApi.reducerPath]: baseApi.reducer,
   },
 
@@ -14,3 +38,6 @@ export const store = configureStore({
       serializableCheck: false,
     }).concat(baseApi.middleware),
 });
+
+export const persistor =
+  persistStore(store);

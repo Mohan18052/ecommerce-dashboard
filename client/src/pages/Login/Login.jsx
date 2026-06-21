@@ -23,6 +23,14 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (
+      !formData.email.trim() ||
+      !formData.password.trim()
+    ) {
+      alert("Please enter email and password");
+      return;
+    }
+
     try {
       const response = await fetch(
         "http://localhost:4000/users"
@@ -37,7 +45,7 @@ function Login() {
       );
 
       if (!user) {
-        alert("Please Register First");
+        alert("Invalid Email or Password");
         return;
       }
 
@@ -91,9 +99,7 @@ function Login() {
         <br />
         <br />
 
-        <p>
-          Don't have an account?
-        </p>
+        <p>Don't have an account?</p>
 
         <Link to="/register">
           Register

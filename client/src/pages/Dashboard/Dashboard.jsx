@@ -1,6 +1,20 @@
+import { useSelector } from "react-redux";
+
+import Navbar from "../../components/Navbar/Navbar";
+
 function Dashboard() {
+  const user = useSelector(
+    (state) => state.root.auth.user
+  );
+
   return (
-    <h1>Dashboard Page</h1>
+    <div>
+      <Navbar />
+
+      <h1>
+        Welcome {user?.name}
+      </h1>
+    </div>
   );
 }
 

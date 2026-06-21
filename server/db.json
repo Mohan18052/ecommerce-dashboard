@@ -23,6 +23,24 @@
       "name": "Mohan1",
       "email": "mohan@gmail.com",
       "password": "Moh@n18052005"
+    },
+    {
+      "id": 5,
+      "name": "vulli",
+      "email": "hemanthvulli531@gmail.com",
+      "password": "12345678"
+    },
+    {
+      "id": 6,
+      "name": "",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": 7,
+      "name": "durga",
+      "email": "mohan16373i3ie@gmail.com",
+      "password": "123456"
     }
   ],
   "posts": [
@@ -55,5 +73,25 @@
     "name": "Chocolate Bar",
     "flavor": "Chocolate",
     "price": 1.99
-  }
+  },
+  "products": [
+    {
+      "id": 1,
+      "title": "iPhone 15",
+      "price": 79999,
+      "category": "Mobile",
+      "stock": 15,
+      "description": "Apple smartphone",
+      "image": "https://picsum.photos/200"
+    },
+    {
+      "id": 2,
+      "title": "Samsung S24",
+      "price": 69999,
+      "category": "Mobile",
+      "stock": 20,
+      "description": "Samsung smartphone",
+      "image": "https://picsum.photos/200"
+    }
+  ]
 }
