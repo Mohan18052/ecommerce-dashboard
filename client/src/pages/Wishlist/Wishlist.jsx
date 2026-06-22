@@ -1,7 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-
 import Navbar from "../../components/Navbar/Navbar";
-
 import {
   removeFromWishlist,
   clearWishlist,
@@ -36,21 +34,41 @@ function Wishlist() {
               border: "1px solid gray",
               margin: "10px",
               padding: "10px",
+              display: "flex",
+              gap: "20px",
+              alignItems: "center",
             }}
           >
-            <h3>{item.title}</h3>
+            <img
+              src={item.image}
+              alt={item.title}
+              style={{
+                width: "120px",
+                height: "120px",
+                objectFit: "cover",
+                borderRadius: "10px",
+              }}
+            />
 
-            <p>₹ {item.price}</p>
+            <div>
+              <h3>{item.title}</h3>
 
-            <button
-              onClick={() =>
-                dispatch(
-                  removeFromWishlist(item.id)
-                )
-              }
-            >
-              Remove
-            </button>
+              <p>Brand: {item.brand}</p>
+
+              <p>Category: {item.category}</p>
+
+              <p>₹ {item.price}</p>
+
+              <button
+                onClick={() =>
+                  dispatch(
+                    removeFromWishlist(item.id)
+                  )
+                }
+              >
+                Remove
+              </button>
+            </div>
           </div>
         ))
       )}

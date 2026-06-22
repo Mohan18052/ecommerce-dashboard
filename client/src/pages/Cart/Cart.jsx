@@ -1,7 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-
 import Navbar from "../../components/Navbar/Navbar";
-
 import {
   removeFromCart,
   clearCart,
@@ -36,23 +34,43 @@ function Cart() {
               border: "1px solid gray",
               margin: "10px",
               padding: "10px",
+              display: "flex",
+              gap: "20px",
+              alignItems: "center",
             }}
           >
-            <h3>{item.title}</h3>
+            <img
+              src={item.image}
+              alt={item.title}
+              style={{
+                width: "120px",
+                height: "120px",
+                objectFit: "cover",
+                borderRadius: "10px",
+              }}
+            />
 
-            <p>₹ {item.price}</p>
+            <div>
+              <h3>{item.title}</h3>
 
-            <p>
-              Quantity: {item.quantity}
-            </p>
+              <p>Brand: {item.brand}</p>
 
-            <button
-              onClick={() =>
-                dispatch(removeFromCart(item.id))
-              }
-            >
-              Remove
-            </button>
+              <p>Category: {item.category}</p>
+
+              <p>₹ {item.price}</p>
+
+              <p>
+                Quantity: {item.quantity}
+              </p>
+
+              <button
+                onClick={() =>
+                  dispatch(removeFromCart(item.id))
+                }
+              >
+                Remove
+              </button>
+            </div>
           </div>
         ))
       )}

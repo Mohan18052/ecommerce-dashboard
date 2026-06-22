@@ -10,7 +10,8 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import Products from "../pages/Products/Products";
 import Product from "../pages/Product/Product";
 import Cart from "../pages/Cart/Cart"; 
-import Wishlist from "../pages/Wishlist/Wishlist"; // Added Wishlist import
+import Wishlist from "../pages/Wishlist/Wishlist";
+import Profile from "../pages/Profile/Profile"; // Added Profile import
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -76,6 +77,16 @@ function AppRouter() {
           element={
             <ProtectedRoute>
               <Wishlist />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Profile Page */}
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />

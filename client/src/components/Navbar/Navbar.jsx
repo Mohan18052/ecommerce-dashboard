@@ -2,6 +2,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { logout } from "../../features/auth/authSlice";
+import {
+  toggleTheme,
+} from "../../features/theme/themeSlice"; // Added themeSlice import
 
 function Navbar() {
   const navigate = useNavigate();
@@ -9,6 +12,11 @@ function Navbar() {
 
   const cartCount = useSelector(
     (state) => state.root.cart.items.length
+  );
+
+  // Added theme state selector
+  const theme = useSelector(
+    (state) => state.root.theme.mode
   );
 
   const handleLogout = () => {
@@ -43,8 +51,24 @@ function Navbar() {
         Wishlist
       </button>
 
-      <button>
+      {/* Updated Profile Button */}
+      <button
+        onClick={() =>
+          navigate("/profile")
+        }
+      >
         Profile
+      </button>
+
+      {/* Added Toggle Theme Button */}
+      <button
+        onClick={() =>
+          dispatch(toggleTheme())
+        }
+      >
+        {theme === "light"
+          ? "🌙 Dark"
+          : "☀️ Light"}
       </button>
 
       <button onClick={handleLogout}>
