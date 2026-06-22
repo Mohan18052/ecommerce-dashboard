@@ -1,37 +1,89 @@
-two days Progress
-Project Setup
-✅ Created React 18 application using Vite
-✅ Configured project structure according to assignment requirements
-✅ Organized folders for app, services, features, pages, components, router, hooks, utils, constants, assets, etc.
-Redux Toolkit Setup
-✅ Installed Redux Toolkit
-✅ Installed React Redux
-✅ Configured Redux Store
-✅ Created Root Reducer
-✅ Created Redux Slices
-   - Auth Slice
-   - Cart Slice
-   - Wishlist Slice
-   - Notification Slice
-   - Theme Slice
-   - UI Slice
-RTK Query Setup
-✅ Configured baseApi using RTK Query
-✅ Connected API base URL to backend server
-Authentication
-✅ Created Register Page
-✅ Connected Register API with backend
-✅ Successfully storing users in db.json
-✅ Created Login Page
-✅ Implemented Login Validation using users data from db.json
-Routing & Security
-✅ Configured React Router
-✅ Created Protected Routes
-✅ Restricted Dashboard access for unauthenticated users
-Persistence
-✅ Implemented login persistence
-✅ User remains logged in after page refresh
-Backend Integration
-✅ Connected React frontend with provided mock backend
-✅ Tested API communication successfully
-✅ Verified user registration and login flow
+## 4 days work 
+
+## Completed Features 
+
+### Authentication
+- User Registration
+- User Login
+- Protected Routes
+- Logout Functionality
+- Redux Authentication State
+- Auth Persistence
+
+### Redux Toolkit
+- Store Configuration
+- Root Reducer Setup
+- Auth Slice
+- Cart Slice
+- Wishlist Slice
+- Theme Slice
+- UI Slice
+- Notification Slice
+
+### RTK Query
+- Base API Setup
+- Products Endpoint
+- Product Details Endpoint
+- API Integration
+
+### Products Module
+- Product Listing
+- Product Details Page
+- Product Images
+- Search Functionality
+- Debounced Search (300ms)
+- Category Filter
+- Product Sorting
+- Pagination
+
+### Dashboard
+- Welcome Screen
+- Infinite Scroll Products(used 50 only for now after i will change)
+- Product Navigation
+
+### Cart
+- Add To Cart
+- Remove From Cart
+- Quantity Handling
+- Product Images In Cart
+
+### Wishlist
+- Add To Wishlist
+- Remove From Wishlist
+- Product Images In Wishlist
+
+### Profile
+- User Profile Page
+- User Information Display
+
+### Navigation
+- Global Navbar
+- Dashboard Navigation
+- Products Navigation
+- Cart Navigation
+- Wishlist Navigation
+- Profile Navigation
+
+### Redux Persist
+- Auth Persistence
+- Wishlist Persistence
+- Theme Persistence
+
+### UI Features
+- Skeleton Loader
+- Empty State
+- Retry Button
+- Global Error UI
+- Error Boundary
+
+### Theme
+- Dark Mode
+- Light Mode
+- Theme Toggle
+- Theme Persistence
+
+### Custom Hooks
+- useDebounce
+- usePagination
+- useInfiniteScroll
+- useIntersectionObserver
