@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { logout } from "../../features/auth/authSlice";
 import {
   toggleTheme,
-} from "../../features/theme/themeSlice"; // Added themeSlice import
+} from "../../features/theme/themeSlice"; 
+import useOnlineStatus from "../../hooks/useOnlineStatus"; // Added online status hook import
 
 function Navbar() {
   const navigate = useNavigate();
@@ -19,6 +20,9 @@ function Navbar() {
     (state) => state.root.theme.mode
   );
 
+  // Added online status tracking hook
+  const isOnline = useOnlineStatus();
+
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
@@ -32,8 +36,22 @@ function Navbar() {
         padding: "15px",
         borderBottom: "1px solid #ccc",
         marginBottom: "20px",
+        alignItems: "center", // Keeps the status text vertically aligned with the buttons
       }}
     >
+      {/* Added Online/Offline Status Indicator */}
+      <div>
+        {isOnline ? (
+          <span>
+            🟢 Online
+          </span>
+        ) : (
+          <span>
+            🔴 Offline
+          </span>
+        )}
+      </div>
+
       <button onClick={() => navigate("/")}>
         Dashboard
       </button>

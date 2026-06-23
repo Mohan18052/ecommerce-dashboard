@@ -1,8 +1,9 @@
+import { useEffect } from "react"; 
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../features/cart/cartSlice";
-import { addToWishlist } from "../../features/wishlist/wishlistSlice"; // Added Wishlist import
-import { useGetProductByIdQuery } from "../../features/products/productsApi";
+import { useAddWishlistItemMutation } from "../../features/wishlist/wishlistApi"; // Added wishlistApi mutation import instead of slice
+import { useLazyGetProductByIdQuery } from "../../features/products/productsApi"; 
 import Navbar from "../../components/Navbar/Navbar";
 
 function Product() {
@@ -10,11 +11,25 @@ function Product() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const {
-    data,
-    isLoading,
-    error,
-  } = useGetProductByIdQuery(id);
+  // Added wishlist api mutation trigger hook
+  const [
+    addWishlistItem,
+  ] = useAddWishlistItemMutation();
+
+  const [
+    getProduct,
+    {
+      data,
+      isLoading,
+      error,
+    },
+  ] = useLazyGetProductByIdQuery();
+
+  useEffect(() => {
+    if (id) {
+      getProduct(id);
+    }
+  }, [id, getProduct]);
 
   if (isLoading) {
     return <h1>Loading Product...</h1>;
@@ -22,6 +37,10 @@ function Product() {
 
   if (error) {
     return <h1>Product Not Found</h1>;
+  }
+
+  if (!data) {
+    return null;
   }
 
   return (
@@ -76,12 +95,12 @@ function Product() {
           Add To Cart
         </button>
 
-        {/* Updated Add To Wishlist Button */}
+        {/* Updated Add To Wishlist Button to trigger API mutation handler directly */}
         <button
           style={{
             marginLeft: "10px",
           }}
-          onClick={() => dispatch(addToWishlist(data))}
+          onClick={() => addWishlistItem(data)}
         >
           Add To Wishlist
         </button>

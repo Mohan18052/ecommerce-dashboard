@@ -3,7 +3,8 @@ import { useSelector } from "react-redux";
 
 import Navbar from "../../components/Navbar/Navbar";
 import ProductCard from "../../components/ProductCard/ProductCard";
-import Loader from "../../components/Loader/Loader"; // Added Loader import
+import Loader from "../../components/Loader/Loader"; 
+import VirtualizedList from "../../components/VirtualizedList/VirtualizedList"; // Added VirtualizedList import
 
 import {
   useGetProductsQuery,
@@ -89,22 +90,19 @@ function Dashboard() {
         Welcome {user?.name}
       </h1>
 
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "10px",
-        }}
-      >
-        {data
-          .slice(0, visibleCount)
-          .map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-            />
-          ))}
-      </div>
+      {/* Replaced standard flex box layout wrapper with VirtualizedList */}
+      <VirtualizedList
+        items={data.slice(
+          0,
+          visibleCount
+        )}
+        renderItem={(product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+          />
+        )}
+      />
 
       <div
         ref={loaderRef}

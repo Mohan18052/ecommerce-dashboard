@@ -4,94 +4,123 @@ import {
   Route,
 } from "react-router-dom";
 
-import Login from "../pages/Login/Login";
-import Register from "../pages/Register/Register";
-import Dashboard from "../pages/Dashboard/Dashboard";
-import Products from "../pages/Products/Products";
-import Product from "../pages/Product/Product";
-import Cart from "../pages/Cart/Cart"; 
-import Wishlist from "../pages/Wishlist/Wishlist";
-import Profile from "../pages/Profile/Profile"; // Added Profile import
+import {
+  lazy,
+  Suspense,
+} from "react";
 
 import ProtectedRoute from "./ProtectedRoute";
+
+const Login = lazy(() =>
+  import("../pages/Login/Login")
+);
+
+const Register = lazy(() =>
+  import("../pages/Register/Register")
+);
+
+const Dashboard = lazy(() =>
+  import("../pages/Dashboard/Dashboard")
+);
+
+const Products = lazy(() =>
+  import("../pages/Products/Products")
+);
+
+const Product = lazy(() =>
+  import("../pages/Product/Product")
+);
+
+const Cart = lazy(() =>
+  import("../pages/Cart/Cart")
+);
+
+const Wishlist = lazy(() =>
+  import("../pages/Wishlist/Wishlist")
+);
+
+const Profile = lazy(() =>
+  import("../pages/Profile/Profile")
+);
 
 function AppRouter() {
   return (
     <BrowserRouter>
-      <Routes>
+      <Suspense
+        fallback={
+          <h1>
+            Loading Page...
+          </h1>
+        }
+      >
+        <Routes>
 
-        {/* Public Routes */}
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+          <Route
+            path="/login"
+            element={<Login />}
+          />
 
-        <Route
-          path="/register"
-          element={<Register />}
-        />
+          <Route
+            path="/register"
+            element={<Register />}
+          />
 
-        {/* Dashboard */}
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Products List */}
-        <Route
-          path="/products"
-          element={
-            <ProtectedRoute>
-              <Products />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/products"
+            element={
+              <ProtectedRoute>
+                <Products />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Product Details */}
-        <Route
-          path="/products/:id"
-          element={
-            <ProtectedRoute>
-              <Product />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/products/:id"
+            element={
+              <ProtectedRoute>
+                <Product />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Cart Page */}
-        <Route
-          path="/cart"
-          element={
-            <ProtectedRoute>
-              <Cart />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <Cart />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Wishlist Page */}
-        <Route
-          path="/wishlist"
-          element={
-            <ProtectedRoute>
-              <Wishlist />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/wishlist"
+            element={
+              <ProtectedRoute>
+                <Wishlist />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Profile Page */}
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
 
-      </Routes>
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

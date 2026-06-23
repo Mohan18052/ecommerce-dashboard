@@ -3,7 +3,7 @@ import { useState, useMemo } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import Pagination from "../../components/Pagination/Pagination";
-import Loader from "../../components/Loader/Loader"; // Added Loader import
+import Loader from "../../components/Loader/Loader"; 
 
 import {
   useGetProductsQuery,
@@ -13,11 +13,14 @@ import useDebounce from "../../hooks/useDebounce";
 import usePagination from "../../hooks/usePagination";
 
 function Products() {
+  // Updated query invocation with a 30-second polling interval
   const {
     data,
     isLoading,
     error,
-  } = useGetProductsQuery();
+  } = useGetProductsQuery(undefined, {
+    pollingInterval: 30000,
+  });
 
   const [search, setSearch] = useState("");
   const [category, setCategory] =

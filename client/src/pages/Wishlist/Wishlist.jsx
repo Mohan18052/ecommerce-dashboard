@@ -1,28 +1,30 @@
-import { useSelector, useDispatch } from "react-redux";
 import Navbar from "../../components/Navbar/Navbar";
+
 import {
-  removeFromWishlist,
-  clearWishlist,
-} from "../../features/wishlist/wishlistSlice";
+  useGetWishlistQuery,
+  useRemoveWishlistItemMutation,
+} from "../../features/wishlist/wishlistApi";
 
 function Wishlist() {
-  const dispatch = useDispatch();
+  const {
+    data: wishlistItems = [],
+    isLoading,
+  } = useGetWishlistQuery();
 
-  const wishlistItems = useSelector(
-    (state) => state.root.wishlist.items
-  );
+  const [
+    removeWishlistItem,
+  ] =
+    useRemoveWishlistItemMutation();
+
+  if (isLoading) {
+    return <h2>Loading...</h2>;
+  }
 
   return (
     <div>
       <Navbar />
 
       <h1>Wishlist Page</h1>
-
-      <button
-        onClick={() => dispatch(clearWishlist())}
-      >
-        Clear Wishlist
-      </button>
 
       {wishlistItems.length === 0 ? (
         <h2>Wishlist Empty</h2>
@@ -31,7 +33,8 @@ function Wishlist() {
           <div
             key={item.id}
             style={{
-              border: "1px solid gray",
+              border:
+                "1px solid gray",
               margin: "10px",
               padding: "10px",
               display: "flex",
@@ -53,16 +56,19 @@ function Wishlist() {
             <div>
               <h3>{item.title}</h3>
 
-              <p>Brand: {item.brand}</p>
+              <p>
+                Category:
+                {item.category}
+              </p>
 
-              <p>Category: {item.category}</p>
-
-              <p>₹ {item.price}</p>
+              <p>
+                ₹ {item.price}
+              </p>
 
               <button
                 onClick={() =>
-                  dispatch(
-                    removeFromWishlist(item.id)
+                  removeWishlistItem(
+                    item.id
                   )
                 }
               >
