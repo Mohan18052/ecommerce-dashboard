@@ -1,6 +1,7 @@
-## 4 days work 
+## 5 days work
+# E-Commerce Dashboard
 
-## Completed Features 
+## Completed Features
 
 ### Authentication
 - User Registration
@@ -25,6 +26,11 @@
 - Products Endpoint
 - Product Details Endpoint
 - API Integration
+- Lazy Query
+- Prefetching
+- Polling
+- Refetch On Focus
+- Refetch On Reconnect
 
 ### Products Module
 - Product Listing
@@ -38,7 +44,7 @@
 
 ### Dashboard
 - Welcome Screen
-- Infinite Scroll Products(used 50 only for now after i will change)
+- Infinite Scroll Products
 - Product Navigation
 
 ### Cart
@@ -51,6 +57,8 @@
 - Add To Wishlist
 - Remove From Wishlist
 - Product Images In Wishlist
+- RTK Query Wishlist API
+- Backend Persistence (db.json)
 
 ### Profile
 - User Profile Page
@@ -87,3 +95,14 @@
 - usePagination
 - useInfiniteScroll
 - useIntersectionObserver
+
+### Performance
+- React.memo
+- Route Lazy Loading
+- Suspense
+- Infinite Scrolling
+- Product Prefetching
+
+### Network Features
+- Online / Offline Detection
+- RTK Query Caching
