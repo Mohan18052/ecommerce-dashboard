@@ -8,7 +8,7 @@ import {
 } from "redux-persist/integration/react";
 
 import App from "./App";
-import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary"; // Added ErrorBoundary import
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import "./index.css";
 
 import {
@@ -22,7 +22,7 @@ ReactDOM.createRoot(
   <React.StrictMode>
     <Provider store={store}>
       <PersistGate
-        loading={<h1>Loading...</h1>}
+        loading={null}
         persistor={persistor}
       >
         <ErrorBoundary>

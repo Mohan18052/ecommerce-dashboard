@@ -1,12 +1,13 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../features/cart/cartSlice";
 import { useAddWishlistItemMutation } from "../../features/wishlist/wishlistApi";
-import { useLazyGetProductByIdQuery } from "../../features/products/productsApi";
+import { useGetProductByIdQuery, useGetProductsQuery } from "../../features/products/productsApi";
 import { useAddRecentlyViewedMutation } from "../../features/recentlyViewed/recentlyViewedApi";
 import Navbar from "../../components/Navbar/Navbar";
 import StarRating from "../../components/StarRating/StarRating";
+import ProductCard from "../../components/ProductCard/ProductCard";
 
 function Product() {
   const { id } = useParams();
@@ -16,14 +17,8 @@ function Product() {
   const [addWishlistItem] = useAddWishlistItemMutation();
   const [addRecentlyViewed] = useAddRecentlyViewedMutation();
 
-  const [getProduct, { data, isLoading, error }] =
-    useLazyGetProductByIdQuery();
-
-  useEffect(() => {
-    if (id) {
-      getProduct(id);
-    }
-  }, [id, getProduct]);
+  const { data, isLoading, error } = useGetProductByIdQuery(id, { skip: !id });
+  const { data: allProducts = [] } = useGetProductsQuery();
 
   // Track recently viewed
   useEffect(() => {
@@ -32,6 +27,14 @@ function Product() {
       document.title = `${data.title} — ShopZone`;
     }
   }, [data, addRecentlyViewed]);
+
+  // Related products — same category, exclude current
+  const relatedProducts = useMemo(() => {
+    if (!data || !allProducts.length) return [];
+    return allProducts
+      .filter((p) => p.category === data.category && p.id !== data.id)
+      .slice(0, 4);
+  }, [allProducts, data]);
 
   const handleAddToCart = useCallback(() => {
     dispatch(addToCart(data));
@@ -142,17 +145,14 @@ function Product() {
 
           {/* Details */}
           <div className="space-y-4">
-            {/* Category */}
             <span className="inline-block text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-full">
               {data.category}
             </span>
 
-            {/* Title */}
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
               {data.title}
             </h1>
 
-            {/* Brand */}
             <p className="text-sm text-gray-500 dark:text-gray-400">
               by{" "}
               <span className="text-text-link dark:text-blue-400 font-semibold">
@@ -160,13 +160,8 @@ function Product() {
               </span>
             </p>
 
-            {/* Rating */}
-            <StarRating
-              rating={data.rating}
-              reviews={data.reviews}
-            />
+            <StarRating rating={data.rating} reviews={data.reviews} />
 
-            {/* Price */}
             <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
               <div className="flex items-baseline gap-1">
                 <span className="text-sm text-gray-500">₹</span>
@@ -179,7 +174,6 @@ function Product() {
               </p>
             </div>
 
-            {/* Stock */}
             <div className="flex items-center gap-2">
               {data.stock > 10 ? (
                 <>
@@ -205,7 +199,6 @@ function Product() {
               )}
             </div>
 
-            {/* Description */}
             <div>
               <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
                 About this product
@@ -215,7 +208,6 @@ function Product() {
               </p>
             </div>
 
-            {/* Actions */}
             <div className="flex gap-3 pt-2">
               <button
                 onClick={handleAddToCart}
@@ -226,13 +218,27 @@ function Product() {
               </button>
               <button
                 onClick={handleAddToWishlist}
-                className="flex-1 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-bold py-3 rounded-xl border border-gray-300 dark:border-gray-600 transition-colors text-sm cursor-pointer"
+                className="flex-1 bg-rose-50 dark:bg-rose-900/30 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 font-bold py-3 rounded-xl border border-rose-200 dark:border-rose-800 transition-colors text-sm cursor-pointer"
               >
                 ❤️ Add to Wishlist
               </button>
             </div>
           </div>
         </div>
+
+        {/* Related Products Section */}
+        {relatedProducts.length > 0 && (
+          <section className="mt-10">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+              📦 Related Products in {data.category}
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {relatedProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </>
   );

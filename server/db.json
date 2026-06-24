@@ -1,6 +1,150 @@
 {
   "cart": [],
-  "wishlist": [],
+  "wishlist": [
+    {
+      "id": 1,
+      "title": "iPhone 15 Pro",
+      "brand": "Apple",
+      "category": "Mobile",
+      "price": 129900,
+      "stock": 50,
+      "rating": 4.8,
+      "reviews": 3250,
+      "featured": true,
+      "description": "Premium smartphone with A17 Pro chip and titanium design.",
+      "image": "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=500&auto=format&fit=crop"
+    },
+    {
+      "id": 2,
+      "title": "Galaxy S24 Ultra",
+      "brand": "Samsung",
+      "category": "Mobile",
+      "price": 134999,
+      "stock": 45,
+      "rating": 4.7,
+      "reviews": 2150,
+      "featured": true,
+      "description": "Ultimate Android experience with Galaxy AI and 200MP camera.",
+      "image": "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500&auto=format&fit=crop"
+    },
+    {
+      "id": 4,
+      "title": "ROG Strix SCAR 18",
+      "brand": "ASUS",
+      "category": "Laptop",
+      "price": 289990,
+      "stock": 15,
+      "rating": 4.6,
+      "reviews": 450,
+      "featured": false,
+      "description": "Dominant gaming laptop with RTX 4090 and Intel Core i9.",
+      "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&auto=format&fit=crop"
+    },
+    {
+      "id": 5,
+      "title": "WH-1000XM5",
+      "brand": "Sony",
+      "category": "Audio",
+      "price": 29990,
+      "stock": 120,
+      "rating": 4.8,
+      "reviews": 5400,
+      "featured": true,
+      "description": "Industry-leading noise-canceling wireless headphones.",
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop"
+    },
+    {
+      "id": 6,
+      "title": "AirPods Pro (2nd Gen)",
+      "brand": "Apple",
+      "category": "Audio",
+      "price": 24900,
+      "stock": 200,
+      "rating": 4.7,
+      "reviews": 8900,
+      "featured": false,
+      "description": "Magical wireless earbuds with 2x more Active Noise Cancellation.",
+      "image": "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=500&auto=format&fit=crop"
+    },
+    {
+      "id": 4,
+      "title": "ROG Strix SCAR 18",
+      "brand": "ASUS",
+      "category": "Laptop",
+      "price": 289990,
+      "stock": 15,
+      "rating": 4.6,
+      "reviews": 450,
+      "featured": false,
+      "description": "Dominant gaming laptop with RTX 4090 and Intel Core i9.",
+      "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&auto=format&fit=crop"
+    },
+    {
+      "id": 2,
+      "title": "Galaxy S24 Ultra",
+      "brand": "Samsung",
+      "category": "Mobile",
+      "price": 134999,
+      "stock": 45,
+      "rating": 4.7,
+      "reviews": 2150,
+      "featured": true,
+      "description": "Ultimate Android experience with Galaxy AI and 200MP camera.",
+      "image": "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500&auto=format&fit=crop"
+    },
+    {
+      "id": 3,
+      "title": "MacBook Pro 16-inch",
+      "brand": "Apple",
+      "category": "Laptop",
+      "price": 249900,
+      "stock": 25,
+      "rating": 4.9,
+      "reviews": 1820,
+      "featured": true,
+      "description": "Supercharged by M3 Max chip for extreme performance workflows.",
+      "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&auto=format&fit=crop"
+    },
+    {
+      "id": 2,
+      "title": "Galaxy S24 Ultra",
+      "brand": "Samsung",
+      "category": "Mobile",
+      "price": 134999,
+      "stock": 45,
+      "rating": 4.7,
+      "reviews": 2150,
+      "featured": true,
+      "description": "Ultimate Android experience with Galaxy AI and 200MP camera.",
+      "image": "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500&auto=format&fit=crop"
+    },
+    {
+      "id": 2,
+      "title": "Galaxy S24 Ultra",
+      "brand": "Samsung",
+      "category": "Mobile",
+      "price": 134999,
+      "stock": 45,
+      "rating": 4.7,
+      "reviews": 2150,
+      "featured": true,
+      "description": "Ultimate Android experience with Galaxy AI and 200MP camera.",
+      "image": "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500&auto=format&fit=crop"
+    },
+    {
+      "id": 4,
+      "title": "ROG Strix SCAR 18",
+      "brand": "ASUS",
+      "category": "Laptop",
+      "price": 289990,
+      "stock": 15,
+      "rating": 4.6,
+      "reviews": 450,
+      "featured": false,
+      "description": "Dominant gaming laptop with RTX 4090 and Intel Core i9.",
+      "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&auto=format&fit=crop"
+    }
+  ],
   "users": [
     {
       "id": 1,
@@ -55,6 +199,12 @@
       "name": "pui",
       "email": "pui@gmail.com",
       "password": "123456"
+    },
+    {
+      "id": 10,
+      "name": "Test User",
+      "email": "test@example.com",
+      "password": "password123"
     }
   ],
   "posts": [
@@ -4700,6 +4850,150 @@
       "reviews": 1820,
       "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&auto=format&fit=crop",
       "viewedAt": "2026-06-24T21:14:36.858Z"
+    },
+    {
+      "id": 6,
+      "productId": 3,
+      "title": "MacBook Pro 16-inch",
+      "brand": "Apple",
+      "category": "Laptop",
+      "price": 249900,
+      "rating": 4.9,
+      "reviews": 1820,
+      "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&auto=format&fit=crop",
+      "viewedAt": "2026-06-24T21:24:13.399Z"
+    },
+    {
+      "id": 7,
+      "productId": 3,
+      "title": "MacBook Pro 16-inch",
+      "brand": "Apple",
+      "category": "Laptop",
+      "price": 249900,
+      "rating": 4.9,
+      "reviews": 1820,
+      "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&auto=format&fit=crop",
+      "viewedAt": "2026-06-24T21:24:24.084Z"
+    },
+    {
+      "id": 8,
+      "productId": 3,
+      "title": "MacBook Pro 16-inch",
+      "brand": "Apple",
+      "category": "Laptop",
+      "price": 249900,
+      "rating": 4.9,
+      "reviews": 1820,
+      "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&auto=format&fit=crop",
+      "viewedAt": "2026-06-24T21:24:42.586Z"
+    },
+    {
+      "id": 9,
+      "productId": 3,
+      "title": "MacBook Pro 16-inch",
+      "brand": "Apple",
+      "category": "Laptop",
+      "price": 249900,
+      "rating": 4.9,
+      "reviews": 1820,
+      "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&auto=format&fit=crop",
+      "viewedAt": "2026-06-24T21:24:54.372Z"
+    },
+    {
+      "id": 10,
+      "productId": 4,
+      "title": "ROG Strix SCAR 18",
+      "brand": "ASUS",
+      "category": "Laptop",
+      "price": 289990,
+      "rating": 4.6,
+      "reviews": 450,
+      "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&auto=format&fit=crop",
+      "viewedAt": "2026-06-24T21:26:15.249Z"
+    },
+    {
+      "id": 11,
+      "productId": 1,
+      "title": "iPhone 15 Pro",
+      "brand": "Apple",
+      "category": "Mobile",
+      "price": 129900,
+      "rating": 4.8,
+      "reviews": 3250,
+      "image": "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=500&auto=format&fit=crop",
+      "viewedAt": "2026-06-24T21:28:12.231Z"
+    },
+    {
+      "id": 12,
+      "productId": 2,
+      "title": "Galaxy S24 Ultra",
+      "brand": "Samsung",
+      "category": "Mobile",
+      "price": 134999,
+      "rating": 4.7,
+      "reviews": 2150,
+      "image": "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500&auto=format&fit=crop",
+      "viewedAt": "2026-06-24T21:28:22.355Z"
+    },
+    {
+      "id": 13,
+      "productId": 4,
+      "title": "ROG Strix SCAR 18",
+      "brand": "ASUS",
+      "category": "Laptop",
+      "price": 289990,
+      "rating": 4.6,
+      "reviews": 450,
+      "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&auto=format&fit=crop",
+      "viewedAt": "2026-06-24T21:28:36.056Z"
+    },
+    {
+      "id": 14,
+      "productId": 5,
+      "title": "WH-1000XM5",
+      "brand": "Sony",
+      "category": "Audio",
+      "price": 29990,
+      "rating": 4.8,
+      "reviews": 5400,
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop",
+      "viewedAt": "2026-06-24T21:28:42.139Z"
+    },
+    {
+      "id": 15,
+      "productId": 6,
+      "title": "AirPods Pro (2nd Gen)",
+      "brand": "Apple",
+      "category": "Audio",
+      "price": 24900,
+      "rating": 4.7,
+      "reviews": 8900,
+      "image": "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=500&auto=format&fit=crop",
+      "viewedAt": "2026-06-24T21:28:50.919Z"
+    },
+    {
+      "id": 16,
+      "productId": 4,
+      "title": "ROG Strix SCAR 18",
+      "brand": "ASUS",
+      "category": "Laptop",
+      "price": 289990,
+      "rating": 4.6,
+      "reviews": 450,
+      "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&auto=format&fit=crop",
+      "viewedAt": "2026-06-24T21:28:56.188Z"
+    },
+    {
+      "id": 17,
+      "productId": 29,
+      "title": "Asus ROG Swift 32-inch",
+      "brand": "ASUS",
+      "category": "Gaming",
+      "price": 99990,
+      "rating": 4.7,
+      "reviews": 180,
+      "image": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500&auto=format&fit=crop",
+      "viewedAt": "2026-06-24T22:22:07.783Z"
     }
   ]
 }

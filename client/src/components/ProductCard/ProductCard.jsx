@@ -1,23 +1,14 @@
 import { memo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { productsApi } from "../../features/products/productsApi";
 import { addToCart } from "../../features/cart/cartSlice";
+import { useAddWishlistItemMutation } from "../../features/wishlist/wishlistApi";
 import StarRating from "../StarRating/StarRating";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const handlePrefetch = useCallback(() => {
-    dispatch(
-      productsApi.util.prefetch(
-        "getProductById",
-        product.id,
-        { force: false }
-      )
-    );
-  }, [dispatch, product.id]);
+  const [addWishlistItem] = useAddWishlistItemMutation();
 
   const handleViewDetails = useCallback(() => {
     navigate(`/products/${product.id}`);
@@ -31,9 +22,16 @@ function ProductCard({ product }) {
     [dispatch, product]
   );
 
+  const handleAddToWishlist = useCallback(
+    (e) => {
+      e.stopPropagation();
+      addWishlistItem(product);
+    },
+    [addWishlistItem, product]
+  );
+
   return (
     <div
-      onMouseEnter={handlePrefetch}
       className="group bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col cursor-pointer"
       onClick={handleViewDetails}
     >
@@ -59,25 +57,20 @@ function ProductCard({ product }) {
 
       {/* Content */}
       <div className="flex flex-col flex-1 p-4 gap-2">
-        {/* Category Badge */}
         <span className="text-[10px] font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
           {product.category}
         </span>
 
-        {/* Title */}
         <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
           {product.title}
         </h3>
 
-        {/* Brand */}
         <p className="text-xs text-gray-500 dark:text-gray-400">
           by <span className="text-text-link dark:text-blue-400 font-medium">{product.brand}</span>
         </p>
 
-        {/* Rating */}
         <StarRating rating={product.rating} reviews={product.reviews} />
 
-        {/* Price */}
         <div className="mt-auto pt-2">
           <div className="flex items-baseline gap-1">
             <span className="text-xs text-gray-500">₹</span>
@@ -92,19 +85,19 @@ function ProductCard({ product }) {
           )}
         </div>
 
-        {/* Actions */}
+        {/* Actions — Add to Cart + Add to Wishlist */}
         <div className="flex gap-2 mt-2">
           <button
             onClick={handleAddToCart}
             className="flex-1 bg-amber-400 hover:bg-amber-500 text-gray-900 text-xs font-semibold py-2 px-3 rounded-lg transition-colors cursor-pointer"
           >
-            Add to Cart
+            🛒 Add to Cart
           </button>
           <button
-            onClick={handleViewDetails}
-            className="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-xs font-semibold py-2 px-3 rounded-lg transition-colors cursor-pointer"
+            onClick={handleAddToWishlist}
+            className="flex-1 bg-rose-50 dark:bg-rose-900/30 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 text-xs font-semibold py-2 px-3 rounded-lg border border-rose-200 dark:border-rose-800 transition-colors cursor-pointer"
           >
-            View Details
+            ❤️ Wishlist
           </button>
         </div>
       </div>

@@ -43,16 +43,21 @@ const Profile = lazy(() =>
   import("../pages/Profile/Profile")
 );
 
+function PageLoader() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-8 h-8 border-3 border-gray-300 dark:border-gray-600 border-t-amber-400 rounded-full animate-spin" />
+        <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
 function AppRouter() {
   return (
     <BrowserRouter>
-      <Suspense
-        fallback={
-          <h1>
-            Loading Page...
-          </h1>
-        }
-      >
+      <Suspense fallback={<PageLoader />}>
         <Routes>
 
           <Route
