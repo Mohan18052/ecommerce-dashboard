@@ -7,6 +7,8 @@ import {
 
 import storageModule from "redux-persist/lib/storage";
 
+import { setupListeners } from "@reduxjs/toolkit/query";
+
 import rootReducer from "./rootReducer";
 import { baseApi } from "../services/baseApi";
 
@@ -38,6 +40,9 @@ export const store = configureStore({
       serializableCheck: false,
     }).concat(baseApi.middleware),
 });
+
+// Enable refetchOnFocus and refetchOnReconnect
+setupListeners(store.dispatch);
 
 export const persistor =
   persistStore(store);

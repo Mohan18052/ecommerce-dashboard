@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -12,99 +12,169 @@ function Login() {
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
+  useEffect(() => {
+    document.title = "Login — ShopZone";
+  }, []);
+
+  const handleChange = useCallback((e) => {
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
-  };
+    }));
+    setError("");
+  }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
 
-    if (
-      !formData.email.trim() ||
-      !formData.password.trim()
-    ) {
-      alert("Please enter email and password");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        "http://localhost:4000/users"
-      );
-
-      const users = await response.json();
-
-      const user = users.find(
-        (u) =>
-          u.email === formData.email &&
-          u.password === formData.password
-      );
-
-      if (!user) {
-        alert("Invalid Email or Password");
+      if (!formData.email.trim() || !formData.password.trim()) {
+        setError("Please enter email and password");
         return;
       }
 
-      dispatch(
-        loginSuccess({
-          user,
-          token: "fake-jwt-token",
-        })
-      );
+      setLoading(true);
+      setError("");
 
-      alert("Login Success");
+      try {
+        const response = await fetch("http://localhost:4000/users");
 
-      navigate("/");
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong");
-    }
-  };
+        if (!response.ok) {
+          throw new Error("Server error");
+        }
+
+        const users = await response.json();
+
+        const user = users.find(
+          (u) =>
+            u.email === formData.email &&
+            u.password === formData.password
+        );
+
+        if (!user) {
+          setError("Invalid email or password");
+          setLoading(false);
+          return;
+        }
+
+        dispatch(
+          loginSuccess({
+            user,
+            token: "fake-jwt-token",
+          })
+        );
+
+        navigate("/");
+      } catch (err) {
+        console.error(err);
+        setError("Unable to connect to server. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [formData, dispatch, navigate]
+  );
 
   return (
-    <div>
-      <h1>Login Page</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-primary to-primary-light p-4">
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <div className="text-4xl mb-2">🛒</div>
+          <h1 className="text-3xl font-bold text-white">
+            Shop<span className="text-accent">Zone</span>
+          </h1>
+          <p className="text-gray-400 text-sm mt-1">
+            Premium Electronics Store
+          </p>
+        </div>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Enter Email"
-          value={formData.email}
-          onChange={handleChange}
-        />
+        {/* Card */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
+            Welcome back
+          </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+            Sign in to your account
+          </p>
 
-        <br />
-        <br />
+          {error && (
+            <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm px-4 py-3 rounded-lg mb-4">
+              ⚠️ {error}
+            </div>
+          )}
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Enter Password"
-          value={formData.password}
-          onChange={handleChange}
-        />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label
+                htmlFor="login-email"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
+                Email address
+              </label>
+              <input
+                id="login-email"
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition-all text-sm"
+                autoComplete="email"
+              />
+            </div>
 
-        <br />
-        <br />
+            <div>
+              <label
+                htmlFor="login-password"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
+                Password
+              </label>
+              <input
+                id="login-password"
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition-all text-sm"
+                autoComplete="current-password"
+              />
+            </div>
 
-        <button type="submit">
-          Login
-        </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-amber-400 hover:bg-amber-500 text-gray-900 font-bold py-3 rounded-lg transition-colors shadow-md hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed text-sm cursor-pointer"
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-gray-900/30 border-t-gray-900 rounded-full animate-spin" />
+                  Signing in...
+                </span>
+              ) : (
+                "Sign In"
+              )}
+            </button>
+          </form>
 
-        <br />
-        <br />
-
-        <p>Don't have an account?</p>
-
-        <Link to="/register">
-          Register
-        </Link>
-      </form>
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Don't have an account?{" "}
+              <Link
+                to="/register"
+                className="text-text-link dark:text-blue-400 font-semibold hover:underline"
+              >
+                Create account
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
