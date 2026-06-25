@@ -53,20 +53,22 @@ function Navbar() {
       <nav className="bg-primary text-white border-b-2 border-accent">
         <div className="px-4 sm:px-6">
           <div className="flex items-center justify-between h-14 gap-4">
-
-            {/* Logo */}
-            <button
-              onClick={() => handleNavigate("/")}
-              className="flex items-center flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity"
-            >
-              <span className="text-2xl font-black tracking-tight">
-                <span className="text-accent">Shop</span>
-                <span className="text-white">Zone</span>
-              </span>
-            </button>
+            
+            {/* Left side: Logo */}
+            <div className="flex-1 flex items-center">
+              <button
+                onClick={() => handleNavigate("/")}
+                className="flex items-center flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity"
+              >
+                <span className="text-2xl font-black tracking-tight">
+                  <span className="text-accent">Shop</span>
+                  <span className="text-white">Zone</span>
+                </span>
+              </button>
+            </div>
 
             {/* Desktop Center Nav — bordered box style */}
-            <div className="hidden md:flex items-center gap-2">
+            <div className="hidden md:flex items-center justify-center gap-2 flex-shrink-0">
               <NavButton label="Dashboard"  onClick={() => handleNavigate("/")}         active={isActive("/")}         icon="⊞" />
               <NavButton label="Products"   onClick={() => handleNavigate("/products")}  active={isActive("/products")} icon="📦" />
               <NavButton label="Cart"       onClick={() => handleNavigate("/cart")}      active={isActive("/cart")}     icon="🛒" badge={cartCount} />
@@ -74,12 +76,12 @@ function Navbar() {
             </div>
 
             {/* Right Side */}
-            <div className="hidden md:flex items-center gap-2">
+            <div className="hidden md:flex items-center justify-end gap-2 flex-1">
 
               {/* Online status */}
-              <div className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg bg-white/10 border border-white/20">
+              <div className="flex items-center gap-1.5 text-xs h-9 px-3 rounded-lg bg-white/10 border border-white/20">
                 <span className={`w-2 h-2 rounded-full ${isOnline ? "bg-green-400" : "bg-red-400"}`} />
-                <span className="text-gray-300">{isOnline ? "Online" : "Offline"}</span>
+                <span className="text-gray-300 font-medium">{isOnline ? "Online" : "Offline"}</span>
               </div>
 
               {/* Theme toggle */}
@@ -172,7 +174,7 @@ function NavButton({ label, badge, onClick, active, icon }) {
   return (
     <button
       onClick={onClick}
-      className={`relative flex items-center gap-1.5 px-3 py-2 text-sm font-semibold rounded-lg border transition-all duration-200 cursor-pointer ${
+      className={`relative flex items-center justify-center gap-1.5 px-3 h-9 text-sm font-semibold rounded-lg border transition-all duration-200 cursor-pointer ${
         active
           ? "bg-accent/20 text-accent border-accent/60 shadow-sm shadow-accent/20"
           : "text-gray-300 border-white/20 bg-white/5 hover:bg-white/10 hover:text-white hover:border-white/40"
