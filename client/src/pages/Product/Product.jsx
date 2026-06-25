@@ -125,7 +125,7 @@ function Product() {
         </nav>
 
         {/* Product Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
           {/* Image */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm">
             <div className="relative">
@@ -144,14 +144,16 @@ function Product() {
           </div>
 
           {/* Details */}
-          <div className="space-y-4">
-            <span className="inline-block text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-full">
-              {data.category}
-            </span>
+          <div className="flex flex-col justify-center space-y-5 lg:space-y-6 lg:pl-2">
+            <div>
+              <span className="inline-block text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-3.5 py-1.5 rounded-full mb-3">
+                {data.category}
+              </span>
 
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
-              {data.title}
-            </h1>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white leading-tight">
+                {data.title}
+              </h1>
+            </div>
 
             <p className="text-sm text-gray-500 dark:text-gray-400">
               by{" "}
@@ -162,14 +164,14 @@ function Product() {
 
             <StarRating rating={data.rating} reviews={data.reviews} />
 
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-              <div className="flex items-baseline gap-1">
-                <span className="text-sm text-gray-500">₹</span>
-                <span className="text-3xl font-bold text-gray-900 dark:text-white">
+            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-5 sm:p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-lg text-gray-500 font-medium">₹</span>
+                <span className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white tracking-tight">
                   {data.price?.toLocaleString("en-IN")}
                 </span>
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                 Inclusive of all taxes
               </p>
             </div>
@@ -199,26 +201,26 @@ function Product() {
               )}
             </div>
 
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+            <div className="pt-2">
+              <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2.5">
                 About this product
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+              <p className="text-base text-gray-600 dark:text-gray-300 leading-relaxed max-w-xl">
                 {data.description}
               </p>
             </div>
 
-            <div className="flex gap-3 pt-2">
+            <div className="flex gap-4 pt-4">
               <button
                 onClick={handleAddToCart}
                 disabled={data.stock === 0}
-                className="flex-1 bg-amber-400 hover:bg-amber-500 text-gray-900 font-bold py-3 rounded-xl transition-colors shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm cursor-pointer"
+                className="flex-1 bg-amber-400 hover:bg-amber-500 text-gray-900 font-extrabold py-4 rounded-xl transition-all shadow-md hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 text-base cursor-pointer"
               >
                 🛒 Add to Cart
               </button>
               <button
                 onClick={handleAddToWishlist}
-                className="flex-1 bg-rose-50 dark:bg-rose-900/30 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 font-bold py-3 rounded-xl border border-rose-200 dark:border-rose-800 transition-colors text-sm cursor-pointer"
+                className="flex-1 bg-rose-50 dark:bg-rose-900/30 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 font-extrabold py-4 rounded-xl border-2 border-rose-200 dark:border-rose-800 transition-all hover:shadow-xl hover:-translate-y-0.5 text-base cursor-pointer"
               >
                 ❤️ Add to Wishlist
               </button>
