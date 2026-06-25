@@ -13823,6 +13823,30 @@
       "reviews": 8900,
       "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&auto=format&fit=crop",
       "viewedAt": "2026-06-25T22:31:38.684Z"
+    },
+    {
+      "id": 47,
+      "productId": 2,
+      "title": "Galaxy S24 Ultra",
+      "brand": "Samsung",
+      "category": "Mobile",
+      "price": 134999,
+      "rating": 4.7,
+      "reviews": 2150,
+      "image": "https://images.unsplash.com/photo-1541355447781-6784d720c226?w=500&auto=format&fit=crop",
+      "viewedAt": "2026-06-25T23:17:15.094Z"
+    },
+    {
+      "id": 48,
+      "productId": 1,
+      "title": "iPhone 15 Pro",
+      "brand": "Apple",
+      "category": "Mobile",
+      "price": 129900,
+      "rating": 4.8,
+      "reviews": 3250,
+      "image": "https://images.unsplash.com/photo-1533228100845-08145b01de14?w=500&auto=format&fit=crop",
+      "viewedAt": "2026-06-25T23:17:35.422Z"
     }
   ],
   "orders": [
