@@ -2,7 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   items: [],
+  past: [],
+  future: [],
 };
+
+const MAX_HISTORY = 20;
 
 const cartSlice = createSlice({
   name: "cart",
@@ -10,6 +14,11 @@ const cartSlice = createSlice({
 
   reducers: {
     addToCart: (state, action) => {
+      // Save current state for undo
+      state.past.push([...state.items]);
+      if (state.past.length > MAX_HISTORY) state.past.shift();
+      state.future = [];
+
       const existingItem = state.items.find(
         (item) => item.id === action.payload.id
       );
@@ -25,12 +34,20 @@ const cartSlice = createSlice({
     },
 
     removeFromCart: (state, action) => {
+      state.past.push([...state.items]);
+      if (state.past.length > MAX_HISTORY) state.past.shift();
+      state.future = [];
+
       state.items = state.items.filter(
         (item) => item.id !== action.payload
       );
     },
 
     incrementQuantity: (state, action) => {
+      state.past.push(state.items.map((i) => ({ ...i })));
+      if (state.past.length > MAX_HISTORY) state.past.shift();
+      state.future = [];
+
       const item = state.items.find(
         (item) => item.id === action.payload
       );
@@ -40,6 +57,10 @@ const cartSlice = createSlice({
     },
 
     decrementQuantity: (state, action) => {
+      state.past.push(state.items.map((i) => ({ ...i })));
+      if (state.past.length > MAX_HISTORY) state.past.shift();
+      state.future = [];
+
       const item = state.items.find(
         (item) => item.id === action.payload
       );
@@ -53,7 +74,25 @@ const cartSlice = createSlice({
     },
 
     clearCart: (state) => {
+      state.past.push([...state.items]);
+      if (state.past.length > MAX_HISTORY) state.past.shift();
+      state.future = [];
+
       state.items = [];
+    },
+
+    undoCart: (state) => {
+      if (state.past.length === 0) return;
+      const previous = state.past.pop();
+      state.future.push([...state.items]);
+      state.items = previous;
+    },
+
+    redoCart: (state) => {
+      if (state.future.length === 0) return;
+      const next = state.future.pop();
+      state.past.push([...state.items]);
+      state.items = next;
     },
   },
 });
@@ -70,12 +109,17 @@ export const selectCartTotal = (state) =>
     0
   );
 
+export const selectCanUndo = (state) => state.root.cart.past.length > 0;
+export const selectCanRedo = (state) => state.root.cart.future.length > 0;
+
 export const {
   addToCart,
   removeFromCart,
   incrementQuantity,
   decrementQuantity,
   clearCart,
+  undoCart,
+  redoCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

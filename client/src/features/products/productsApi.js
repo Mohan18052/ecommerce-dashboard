@@ -37,6 +37,21 @@ export const productsApi = baseApi.injectEndpoints({
         };
       },
 
+      // serializeQueryArgs — normalize cache key
+      serializeQueryArgs: ({ endpointName }) => {
+        return endpointName;
+      },
+
+      // merge — merge new data into existing cache
+      merge: (currentCache, newItems) => {
+        return newItems;
+      },
+
+      // forceRefetch — refetch if data older than 120s
+      forceRefetch: ({ currentArg, previousArg }) => {
+        return currentArg !== previousArg;
+      },
+
       keepUnusedDataFor: 120,
     }),
 

@@ -98,3 +98,31 @@ button:focus-visible {
   outline: 2px solid #febd69;
   outline-offset: 2px;
 }
+
+/* Fade-in animation for tab transitions */
+@keyframes fadeInContent {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeInContent 0.25s ease-out;
+}
+
+/* Page background */
+.dark body {
+  background-color: #0f1117;
+}
+
+body {
+  background-color: #f3f4f6;
+}
+
+/* Dark mode - make sidebar and cards blend properly */
+.dark .bg-white {
+  background-color: #1e2433 !important;
+}
+
+.dark .border-gray-200 {
+  border-color: #2d3748 !important;
+}

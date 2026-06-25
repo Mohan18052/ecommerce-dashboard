@@ -25,7 +25,6 @@ function Products() {
   const [visibleCount, setVisibleCount] = useState(20);
   const [useVirtualized, setUseVirtualized] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchFocused, setSearchFocused] = useState(false);
 
   const loaderRef = useRef(null);
   const debouncedSearch = useDebounce(search, 300);
@@ -37,8 +36,7 @@ function Products() {
 
   const hotDealsIds = useMemo(() => {
     if (!data.length) return new Set();
-    const sorted = [...data].sort((a, b) => b.reviews - a.reviews);
-    return new Set(sorted.slice(0, 30).map((p) => p.id));
+    return new Set([...data].sort((a, b) => b.reviews - a.reviews).slice(0, 30).map((p) => p.id));
   }, [data]);
 
   const filteredProducts = useMemo(() => {
@@ -46,8 +44,8 @@ function Products() {
     let products = [...data];
     if (debouncedSearch) {
       const q = debouncedSearch.toLowerCase();
-      products = products.filter(
-        (p) => p.title.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)
+      products = products.filter((p) =>
+        p.title.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)
       );
     }
     if (category !== "All") products = products.filter((p) => p.category === category);
@@ -90,11 +88,9 @@ function Products() {
     return (
       <>
         <Navbar />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {[...Array(12)].map((_, i) => <Loader key={i} />)}
-          </div>
-        </main>
+        <div className="p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          {[...Array(12)].map((_, i) => <Loader key={i} />)}
+        </div>
       </>
     );
   }
@@ -107,7 +103,7 @@ function Products() {
           <div className="text-5xl mb-4">😞</div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Error Loading Products</h2>
           <p className="text-gray-500 dark:text-gray-400 mb-4">{error.friendlyMessage || "Something went wrong"}</p>
-          <button onClick={() => window.location.reload()} className="bg-primary hover:bg-primary-light text-white font-semibold px-6 py-2.5 rounded-lg transition-colors cursor-pointer">🔄 Retry</button>
+          <button onClick={() => window.location.reload()} className="bg-primary text-white font-semibold px-6 py-2.5 rounded-lg cursor-pointer">🔄 Retry</button>
         </div>
       </>
     );
@@ -117,210 +113,237 @@ function Products() {
     <>
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-
-        {/* ── Top bar ── */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
-
-          {/* ── Search bar (improved) ── */}
-          <div className="flex-1 relative group">
-            {/* Glowing border ring on focus */}
-            <div className={`absolute inset-0 rounded-2xl transition-all duration-300 pointer-events-none ${
-              searchFocused
-                ? "ring-2 ring-accent/60 ring-offset-1 ring-offset-transparent"
-                : "ring-0"
-            }`} />
-
-            {/* Search icon */}
-            <div className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200 pointer-events-none ${
-              searchFocused ? "text-accent" : "text-gray-400 dark:text-gray-500"
-            }`}>
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
-              </svg>
-            </div>
-
+      {/* ── Sticky search bar ── */}
+      <div className="sticky top-14 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="flex items-center gap-3 px-4 h-14">
+          {/* Search */}
+          <div className="flex-1 relative">
+            <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
+            </svg>
             <input
               type="text"
-              placeholder="Search by name, brand, or category..."
+              placeholder="Search products, brands, categories..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              onFocus={() => setSearchFocused(true)}
-              onBlur={() => setSearchFocused(false)}
-              className="w-full pl-11 pr-10 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/80 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none text-sm shadow-sm transition-all duration-200 focus:border-accent focus:shadow-md"
+              className="w-full pl-10 pr-8 h-9 rounded-lg border-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 text-sm outline-none focus:border-accent focus:bg-white dark:focus:bg-gray-700 transition-all"
             />
-
-            {/* Clear button */}
             {search && (
-              <button
-                onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-500 dark:text-gray-300 transition-colors cursor-pointer"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+              <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer text-xl leading-none">×</button>
             )}
           </div>
-
-          <div className="flex items-center gap-2">
-            {/* Sidebar toggle */}
-            <button
-              onClick={() => setSidebarOpen((v) => !v)}
-              className={`flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl border transition-all cursor-pointer ${
-                sidebarOpen
-                  ? "bg-primary text-white border-primary shadow-md"
-                  : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50"
-              }`}
-            >
-              ☰ Filters {hasActiveFilters && <span className="bg-accent text-primary text-[10px] font-black px-1.5 py-0.5 rounded-full">ON</span>}
-            </button>
-
-            {/* Virtual view toggle */}
-            <button
-              onClick={() => setUseVirtualized(!useVirtualized)}
-              className={`text-xs font-medium px-3 py-2.5 rounded-xl border transition-colors cursor-pointer ${
-                useVirtualized ? "bg-primary text-white border-primary" : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50"
-              }`}
-            >
-              ⚡ {useVirtualized ? "Virtual ON" : "Virtual View"}
-            </button>
-          </div>
+          {/* Filter btn */}
+          <button
+            onClick={() => setSidebarOpen((v) => !v)}
+            className={`flex items-center gap-2 h-9 px-4 rounded-lg text-sm font-bold border-2 transition-all cursor-pointer flex-shrink-0 ${
+              sidebarOpen
+                ? "bg-primary border-primary text-white"
+                : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-accent hover:text-accent"
+            }`}
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h18M7 12h10M11 20h2" />
+            </svg>
+            Filters
+            {hasActiveFilters && <span className="bg-accent text-primary text-[9px] font-black px-1.5 py-0.5 rounded-full">ON</span>}
+          </button>
+          {/* Virtual view */}
+          <button
+            onClick={() => setUseVirtualized(!useVirtualized)}
+            className={`h-9 px-3 rounded-lg text-xs font-bold border-2 transition-all cursor-pointer flex-shrink-0 ${
+              useVirtualized
+                ? "bg-primary border-primary text-white"
+                : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-gray-300"
+            }`}
+          >
+            ⚡ {useVirtualized ? "Virtual ON" : "Virtual View"}
+          </button>
         </div>
+      </div>
 
-        <div className="flex gap-6">
+      {/* ── Main layout — full width, no max-w ── */}
+      <div className="flex min-h-screen">
 
-          {/* ── Sidebar ── */}
-          {sidebarOpen && (
-            <aside className="w-56 flex-shrink-0">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
-                <div className="flex items-center justify-between px-4 py-3 border-b-2 border-accent bg-gray-50 dark:bg-gray-900">
-                  <span className="text-sm font-bold text-gray-900 dark:text-white">🔍 Filters</span>
-                  {hasActiveFilters && (
-                    <button onClick={handleClearAll} className="text-[10px] text-red-500 font-bold hover:underline cursor-pointer">Clear All</button>
-                  )}
-                </div>
-                <div className="p-4 space-y-6">
-                  <FilterSection title="Special">
-                    {[
-                      { val: "hot", label: "🔥 Hot Deals", count: 30 },
-                      { val: "featured", label: "⭐ Featured", count: data.filter((p) => p.featured).length },
-                      { val: "new", label: "🆕 New Arrivals", count: 40 },
-                    ].map(({ val, label, count }) => (
-                      <FilterOption key={val} label={label} count={count} active={specialFilter === val} onClick={() => setSpecialFilter((v) => (v === val ? "" : val))} />
-                    ))}
-                  </FilterSection>
-                  <FilterSection title="Category">
-                    {categories.map((cat) => (
-                      <FilterOption key={cat} label={cat === "All" ? "All Categories" : cat} active={category === cat} onClick={() => setCategory(cat)} />
-                    ))}
-                  </FilterSection>
-                  <FilterSection title="Sort By">
-                    {[
-                      { val: "", label: "Relevance" },
-                      { val: "low-high", label: "Price: Low → High" },
-                      { val: "high-low", label: "Price: High → Low" },
-                      { val: "rating", label: "Top Rated" },
-                      { val: "reviews", label: "Most Reviewed" },
-                    ].map(({ val, label }) => (
-                      <FilterOption key={val} label={label} active={sort === val} onClick={() => setSort(val)} />
-                    ))}
-                  </FilterSection>
-                  <FilterSection title="Price Range (₹)">
-                    <div className="flex gap-2">
-                      <input type="number" placeholder="Min" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} className="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white outline-none focus:border-accent" />
-                      <input type="number" placeholder="Max" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} className="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white outline-none focus:border-accent" />
-                    </div>
-                    <button onClick={handleApplyPrice} className="w-full mt-2 py-1.5 bg-accent hover:bg-accent-hover text-primary text-xs font-bold rounded-lg transition-colors cursor-pointer">Apply Price Filter</button>
-                    {(appliedMin || appliedMax) && (
-                      <p className="text-[10px] text-accent font-semibold mt-1 text-center">Active: ₹{appliedMin || "0"} – ₹{appliedMax || "∞"}</p>
-                    )}
-                  </FilterSection>
-                  <FilterSection title="Min Rating">
-                    {[4.5, 4.0, 3.0].map((r) => (
-                      <FilterOption key={r} label={`${"★".repeat(Math.floor(r))} ${r}+`} active={minRating === r} onClick={() => setMinRating((v) => (v === r ? 0 : r))} />
-                    ))}
-                  </FilterSection>
-                  <FilterSection title="Availability">
-                    <FilterOption label="In Stock Only" active={inStockOnly} onClick={() => setInStockOnly((v) => !v)} />
-                    <FilterOption label="All Products" active={!inStockOnly} onClick={() => setInStockOnly(false)} />
-                  </FilterSection>
-                </div>
+        {/* Sidebar */}
+        {sidebarOpen && (
+          <aside className="w-56 flex-shrink-0 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+            <div className="sticky top-28 max-h-[calc(100vh-7rem)] overflow-y-auto">
+
+              {/* Header */}
+              <div className="flex items-center justify-between px-4 py-3 border-b-2 border-accent bg-gray-50 dark:bg-gray-900">
+                <span className="text-sm font-bold text-gray-900 dark:text-white">Filters</span>
+                {hasActiveFilters && (
+                  <button onClick={handleClearAll} className="text-xs text-red-500 font-semibold hover:underline cursor-pointer">Clear all</button>
+                )}
               </div>
-            </aside>
-          )}
 
-          {/* ── Main Content ── */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between mb-5">
-              <div>
-                <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white">Products</h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{filteredProducts.length} products found</p>
+              <div className="p-3 space-y-1">
+
+                <SidebarGroup title="Special Offers">
+                  {[
+                    { val: "hot", label: "Hot Deals", emoji: "🔥", count: 30 },
+                    { val: "featured", label: "Featured", emoji: "⭐", count: data.filter((p) => p.featured).length },
+                    { val: "new", label: "New Arrivals", emoji: "🆕", count: 40 },
+                  ].map(({ val, label, emoji, count }) => (
+                    <SidebarItem key={val} emoji={emoji} label={label} count={count}
+                      active={specialFilter === val}
+                      onClick={() => setSpecialFilter((v) => (v === val ? "" : val))}
+                    />
+                  ))}
+                </SidebarGroup>
+
+                <SidebarDivider />
+
+                <SidebarGroup title="Category">
+                  {categories.map((cat) => (
+                    <SidebarItem key={cat} label={cat === "All" ? "All Categories" : cat}
+                      active={category === cat} onClick={() => setCategory(cat)} />
+                  ))}
+                </SidebarGroup>
+
+                <SidebarDivider />
+
+                <SidebarGroup title="Sort By">
+                  {[
+                    { val: "", label: "Relevance" },
+                    { val: "low-high", label: "Price: Low → High" },
+                    { val: "high-low", label: "Price: High → Low" },
+                    { val: "rating", label: "Top Rated" },
+                    { val: "reviews", label: "Most Reviewed" },
+                  ].map(({ val, label }) => (
+                    <SidebarItem key={val} label={label} active={sort === val} onClick={() => setSort(val)} />
+                  ))}
+                </SidebarGroup>
+
+                <SidebarDivider />
+
+                <SidebarGroup title="Price Range (₹)">
+                  <div className="flex gap-1.5 mt-1">
+                    <input type="number" placeholder="Min" value={minPrice} onChange={(e) => setMinPrice(e.target.value)}
+                      className="w-full px-2 py-1.5 text-xs border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white outline-none focus:border-accent" />
+                    <input type="number" placeholder="Max" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}
+                      className="w-full px-2 py-1.5 text-xs border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white outline-none focus:border-accent" />
+                  </div>
+                  <button onClick={handleApplyPrice}
+                    className="w-full mt-2 py-1.5 bg-accent hover:bg-accent-hover text-primary text-xs font-bold rounded-lg cursor-pointer transition-colors">
+                    Apply Filter
+                  </button>
+                  {(appliedMin || appliedMax) && (
+                    <p className="text-[10px] text-amber-700 font-semibold mt-1.5 text-center bg-amber-50 dark:bg-amber-900/20 py-1 rounded-lg">
+                      ₹{appliedMin || "0"} – ₹{appliedMax || "∞"}
+                    </p>
+                  )}
+                </SidebarGroup>
+
+                <SidebarDivider />
+
+                <SidebarGroup title="Min Rating">
+                  {[{ r: 4.5, label: "4.5+ ★★★★★" }, { r: 4.0, label: "4.0+ ★★★★" }, { r: 3.0, label: "3.0+ ★★★" }].map(({ r, label }) => (
+                    <SidebarItem key={r} label={label} active={minRating === r}
+                      onClick={() => setMinRating((v) => (v === r ? 0 : r))} />
+                  ))}
+                </SidebarGroup>
+
+                <SidebarDivider />
+
+                <SidebarGroup title="Availability">
+                  <SidebarItem label="In Stock Only" active={inStockOnly} onClick={() => setInStockOnly(true)} />
+                  <SidebarItem label="All Products" active={!inStockOnly} onClick={() => setInStockOnly(false)} />
+                </SidebarGroup>
+
               </div>
             </div>
+          </aside>
+        )}
 
-            {filteredProducts.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-20">
-                <div className="text-5xl mb-4">🔍</div>
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">No Products Found</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Try adjusting your filters</p>
-                <button onClick={handleClearAll} className="bg-accent text-primary font-bold px-5 py-2 rounded-xl text-sm cursor-pointer">Clear All Filters</button>
-              </div>
-            )}
-
-            {filteredProducts.length > 0 && useVirtualized ? (
-              <VirtualizedList items={filteredProducts} renderItem={(product) => <ProductCard key={product.id} product={product} />} />
-            ) : (
-              <>
-                <div className={`grid gap-4 ${sidebarOpen ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3" : "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"}`}>
-                  {visibleProducts.map((product) => <ProductCard key={product.id} product={product} />)}
-                </div>
-                {visibleCount < filteredProducts.length && (
-                  <div ref={loaderRef} className="flex items-center justify-center py-8">
-                    <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400">
-                      <span className="w-5 h-5 border-2 border-gray-300 dark:border-gray-600 border-t-primary rounded-full animate-spin" />
-                      <span className="text-sm">Loading more products...</span>
-                    </div>
-                  </div>
-                )}
-                {visibleCount >= filteredProducts.length && filteredProducts.length > 0 && (
-                  <p className="text-center text-sm text-gray-400 dark:text-gray-500 py-8">
-                    — You've seen all {filteredProducts.length} products —
-                  </p>
-                )}
-              </>
-            )}
+        {/* ── Products grid — takes ALL remaining width ── */}
+        <div className="flex-1 min-w-0 p-5">
+          <div className="mb-4">
+            <h1 className="text-xl font-extrabold text-gray-900 dark:text-white">Products</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {filteredProducts.length} products found
+              {hasActiveFilters && <span className="ml-1.5 text-amber-600 font-semibold">· Filters active</span>}
+            </p>
           </div>
+
+          {filteredProducts.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+              <div className="text-5xl mb-4">🔍</div>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">No Products Found</h2>
+              <p className="text-sm text-gray-500 mb-4">Try adjusting your filters</p>
+              <button onClick={handleClearAll} className="bg-accent text-primary font-bold px-5 py-2 rounded-xl text-sm cursor-pointer">Clear Filters</button>
+            </div>
+          )}
+
+          {filteredProducts.length > 0 && useVirtualized ? (
+            <VirtualizedList items={filteredProducts} sidebarOpen={sidebarOpen} renderItem={(product) => <ProductCard key={product.id} product={product} />} />
+          ) : (
+            <>
+              {/* Grid fills full width — more columns when sidebar closed */}
+              <div className={`grid gap-4 ${
+                sidebarOpen
+                  ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+                  : "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
+              }`}>
+                {visibleProducts.map((product) => <ProductCard key={product.id} product={product} />)}
+              </div>
+
+              {/* Loading spinner */}
+              {visibleCount < filteredProducts.length && (
+                <div ref={loaderRef} className="flex justify-center py-8">
+                  <div className="flex items-center gap-3 text-gray-500">
+                    <span className="w-5 h-5 border-2 border-gray-300 border-t-accent rounded-full animate-spin" />
+                    <span className="text-sm">Loading more...</span>
+                  </div>
+                </div>
+              )}
+
+              {/* End of results message */}
+              {visibleCount >= filteredProducts.length && filteredProducts.length > 0 && (
+                <p className="text-center text-sm text-gray-400 py-8 border-t border-gray-100 dark:border-gray-700 mt-4">
+                  ✓ All {filteredProducts.length} products loaded
+                </p>
+              )}
+            </>
+          )}
         </div>
       </div>
     </>
   );
 }
 
-function FilterSection({ title, children }) {
+function SidebarGroup({ title, children }) {
   return (
-    <div>
-      <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-2.5 pb-1 border-b border-gray-100 dark:border-gray-700">{title}</p>
+    <div className="py-2">
+      <p className="text-[9px] font-extrabold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1.5 px-1">{title}</p>
       <div className="space-y-0.5">{children}</div>
     </div>
   );
 }
 
-function FilterOption({ label, count, active, onClick }) {
+function SidebarItem({ label, emoji, count, active, onClick }) {
   return (
-    <button
-      onClick={onClick}
-      className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-xs font-medium transition-all cursor-pointer text-left ${
+    <button onClick={onClick}
+      className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-medium transition-all cursor-pointer text-left ${
         active
-          ? "bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300 font-semibold"
-          : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+          ? "bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300 font-semibold border border-amber-200 dark:border-amber-800/40"
+          : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 border border-transparent"
       }`}
     >
-      <span className={`w-2 h-2 rounded-full flex-shrink-0 ${active ? "bg-accent" : "bg-gray-300 dark:bg-gray-600"}`} />
-      <span className="flex-1">{label}</span>
-      {count !== undefined && <span className="text-[10px] text-gray-400 dark:text-gray-500">{count}</span>}
+      <span className={`w-2 h-2 rounded-full flex-shrink-0 ${active ? "bg-accent" : "bg-gray-200 dark:bg-gray-600"}`} />
+      {emoji && <span>{emoji}</span>}
+      <span className="flex-1 truncate">{label}</span>
+      {count !== undefined && (
+        <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+          active ? "bg-amber-100 dark:bg-amber-800/40 text-amber-700 dark:text-amber-300" : "bg-gray-100 dark:bg-gray-700 text-gray-400"
+        }`}>{count}</span>
+      )}
     </button>
   );
+}
+
+function SidebarDivider() {
+  return <div className="border-t border-gray-100 dark:border-gray-700 my-1" />;
 }
 
 export default Products;

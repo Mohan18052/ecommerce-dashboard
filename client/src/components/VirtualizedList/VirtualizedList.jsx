@@ -1,7 +1,8 @@
 import { memo, useMemo, useRef, useEffect, useState } from "react";
 import { FixedSizeGrid } from "react-window";
 
-function VirtualizedList({ items, renderItem }) {
+// Added sidebarOpen to the props destructuring
+function VirtualizedList({ items, renderItem, sidebarOpen }) {
   const containerRef = useRef(null);
   const [width, setWidth] = useState(1200);
   const [height, setHeight] = useState(600);
@@ -11,7 +12,6 @@ function VirtualizedList({ items, renderItem }) {
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
         setWidth(containerRef.current.offsetWidth);
-        // Fill from top of this container to bottom of viewport
         setHeight(window.innerHeight - rect.top - 8);
       }
     };
@@ -21,15 +21,17 @@ function VirtualizedList({ items, renderItem }) {
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
+  // Updated columnCount logic to account for the sidebar state
   const columnCount = useMemo(() => {
-    if (width < 640) return 1;
-    if (width < 768) return 2;
-    if (width < 1024) return 3;
-    return 4;
-  }, [width]);
+    if (width < 640) return 2;
+    if (width < 768) return 3;
+    if (width < 1024) return 4;
+    if (width < 1280) return sidebarOpen ? 4 : 5;
+    return sidebarOpen ? 5 : 6; // ← sidebar takes ~224px
+  }, [width, sidebarOpen]); // Added sidebarOpen to the dependency array
 
   const columnWidth = Math.floor(width / columnCount);
-  const rowHeight = 470;
+  const rowHeight = 520;
   const rowCount = Math.ceil(items.length / columnCount);
 
   const Cell = ({ columnIndex, rowIndex, style }) => {

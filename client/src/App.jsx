@@ -18,7 +18,7 @@ function App() {
   }, [theme]);
 
   return (
-    <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 theme-transition`}>
+    <div className={`min-h-screen bg-surface-alt dark:bg-gray-950 text-gray-900 dark:text-gray-100 theme-transition`}>
       <OfflineBanner />
       <AppRouter />
     </div>

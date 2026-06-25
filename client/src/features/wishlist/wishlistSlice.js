@@ -28,6 +28,14 @@ const wishlistSlice = createSlice({
     clearWishlist: (state) => {
       state.items = [];
     },
+
+    reorderWishlist: (state, action) => {
+      const { fromIndex, toIndex } = action.payload;
+      const items = [...state.items];
+      const [moved] = items.splice(fromIndex, 1);
+      items.splice(toIndex, 0, moved);
+      state.items = items;
+    },
   },
 });
 
@@ -35,6 +43,7 @@ export const {
   addToWishlist,
   removeFromWishlist,
   clearWishlist,
+  reorderWishlist,
 } = wishlistSlice.actions;
 
 export default wishlistSlice.reducer;
