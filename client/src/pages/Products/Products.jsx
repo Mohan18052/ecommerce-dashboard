@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import Navbar from "../../components/Navbar/Navbar";
 import ProductCard from "../../components/ProductCard/ProductCard";
@@ -14,6 +15,9 @@ function Products() {
 
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  
+  const [searchParams] = useSearchParams();
+  const categoryParam = searchParams.get("category");
   const [sort, setSort] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -33,6 +37,18 @@ function Products() {
   useEffect(() => { setVisibleCount(20); }, [debouncedSearch, category, sort, appliedMin, appliedMax, minRating, inStockOnly, specialFilter]);
 
   const categories = useMemo(() => ["All", ...new Set(data?.map((p) => p.category))], [data]);
+
+  useEffect(() => {
+    if (categoryParam && data.length > 0) {
+      const normalizedParam = categoryParam.toLowerCase();
+      const matchedCategory = categories.find(
+        (c) => c.toLowerCase() === normalizedParam
+      );
+      if (matchedCategory) {
+        setCategory(matchedCategory);
+      }
+    }
+  }, [categoryParam, categories, data]);
 
   const hotDealsIds = useMemo(() => {
     if (!data.length) return new Set();

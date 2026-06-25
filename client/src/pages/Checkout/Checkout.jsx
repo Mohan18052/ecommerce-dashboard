@@ -31,13 +31,14 @@ function Checkout() {
   const [paymentProcessing, setPaymentProcessing] = useState(false);
   const [saveProfileDetails, setSaveProfileDetails] = useState(true);
   const orderPlacedRef = useRef(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   // Redirect if cart is empty
   useEffect(() => {
-    if (cartItems.length === 0 && !orderPlacedRef.current) {
+    if (cartItems.length === 0 && !orderPlacedRef.current && !showSuccessModal) {
       navigate("/cart");
     }
-  }, [cartItems, navigate]);
+  }, [cartItems, navigate, showSuccessModal]);
 
   // Form states
   const [phone, setPhone] = useState(user?.phone || "");
@@ -194,8 +195,8 @@ function Checkout() {
       // 5. Clear Redux cart state
       dispatch(clearCart());
 
-      // 6. Navigate to Order Success page
-      navigate("/order-success");
+      // 6. Show Success Modal popup instead of navigating away
+      setShowSuccessModal(true);
 
     } catch (err) {
       console.error("Order placement failed:", err);
@@ -512,6 +513,82 @@ function Checkout() {
           </form>
         </div>
       </main>
+
+      {/* Success Modal Popup */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-md" />
+          
+          {/* Modal Pop-up Card */}
+          <div className="relative bg-white dark:bg-slate-800 rounded-3xl max-w-md w-full p-8 border border-slate-100 dark:border-slate-700/60 shadow-2xl text-center space-y-6 animate-fadeInScale">
+            {/* Animated Success Badge */}
+            <div className="flex justify-center">
+              <div className="w-20 h-20 bg-emerald-100 dark:bg-emerald-900/35 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center shadow-inner animate-bounce">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={3}
+                  stroke="currentColor"
+                  className="w-10 h-10 animate-pulse"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4.5 12.75l6 6 9-13.5"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Title and Message */}
+            <div className="space-y-2">
+              <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                Your Order Is Placed!
+              </h1>
+              <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                Thank you for buying.
+              </p>
+            </div>
+
+            {/* Details Card */}
+            <div className="p-4 bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-800/80 rounded-2xl space-y-2 text-xs text-left">
+              <div className="flex justify-between">
+                <span className="font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Status</span>
+                <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping" />
+                  Processing
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Estimated Delivery</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200">3-5 Working Days</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Tracking</span>
+                <span className="font-bold text-blue-600 dark:text-blue-400">Updates sent to email</span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="pt-2 flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={() => navigate("/profile", { state: { activeTab: "orders" } })}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-md hover:shadow-lg cursor-pointer text-sm"
+              >
+                View Your Orders
+              </button>
+              <button
+                onClick={() => navigate("/products")}
+                className="flex-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-white font-bold py-3.5 rounded-xl transition-all border border-slate-200/60 dark:border-slate-700 cursor-pointer text-sm"
+              >
+                Continue Shopping
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
