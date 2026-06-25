@@ -43,6 +43,14 @@ const Profile = lazy(() =>
   import("../pages/Profile/Profile")
 );
 
+const Checkout = lazy(() =>
+  import("../pages/Checkout/Checkout")
+);
+
+const OrderSuccess = lazy(() =>
+  import("../pages/OrderSuccess/OrderSuccess")
+);
+
 const ForgotPassword = lazy(() => import("../pages/ForgotPassword/ForgotPassword"));
 const ResetPassword  = lazy(() => import("../pages/ResetPassword/ResetPassword"));
 
@@ -123,6 +131,24 @@ function AppRouter() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/order-success"
+            element={
+              <ProtectedRoute>
+                <OrderSuccess />
               </ProtectedRoute>
             }
           />

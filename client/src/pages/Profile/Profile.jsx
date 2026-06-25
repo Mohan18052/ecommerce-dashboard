@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import { useGetProductsQuery } from "../../features/products/productsApi";
 import { useGetWishlistQuery } from "../../features/wishlist/wishlistApi";
 import { selectCartCount, selectCartTotal } from "../../features/cart/cartSlice";
 import { loginSuccess, logout } from "../../features/auth/authSlice";
+import { useGetOrdersByUserIdQuery } from "../../features/orders/ordersApi";
 
 function Profile() {
   const dispatch = useDispatch();
@@ -13,9 +14,18 @@ function Profile() {
   const user = useSelector((state) => state.root.auth.user);
   const cartCount = useSelector(selectCartCount);
   const cartTotal = useSelector(selectCartTotal);
+  
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+  }, [location]);
 
   const { data: products = [] } = useGetProductsQuery();
   const { data: wishlistItems = [] } = useGetWishlistQuery();
+  const { data: orders = [], isLoading: ordersLoading } = useGetOrdersByUserIdQuery(user?.id, { skip: !user?.id });
 
   const [activeTab, setActiveTab] = useState("info");
 
@@ -131,6 +141,7 @@ function Profile() {
 
   const tabs = [
     { id: "info", label: "Profile", icon: "👤" },
+    { id: "orders", label: "Orders", icon: "📦" },
     { id: "password", label: "Security", icon: "🔐" },
     { id: "danger", label: "Settings", icon: "⚙️" },
   ];
@@ -321,6 +332,128 @@ function Profile() {
                         </div>
                       </div>
                     </div>
+                  </div>
+                )}
+
+                {/* TAB 4: ORDER HISTORY */}
+                {activeTab === "orders" && (
+                  <div className="space-y-6 animate-fadeIn">
+                    <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
+                      <h3 className="text-xl font-extrabold tracking-tight">Order History</h3>
+                      <p className="text-xs text-slate-400 mt-1">Track and view your past orders</p>
+                    </div>
+
+                    {ordersLoading ? (
+                      <div className="flex flex-col items-center justify-center py-12 gap-3">
+                        <div className="w-8 h-8 border-3 border-slate-200 dark:border-slate-800 border-t-blue-500 rounded-full animate-spin" />
+                        <p className="text-xs text-slate-400 font-semibold">Loading your orders...</p>
+                      </div>
+                    ) : orders.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-16 text-center space-y-4 bg-slate-50 dark:bg-slate-900/40 border border-slate-150 dark:border-slate-800/60 rounded-2xl">
+                        <span className="text-4xl text-slate-300 dark:text-slate-700">📦</span>
+                        <div>
+                          <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300">No orders yet</h4>
+                          <p className="text-xs text-slate-400 mt-1">When you place an order, it will show up here.</p>
+                        </div>
+                        <button
+                          onClick={() => navigate("/products")}
+                          className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl cursor-pointer transition-colors"
+                        >
+                          Start Shopping
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="space-y-6">
+                        {[...orders].reverse().map((order) => (
+                          <div
+                            key={order.id}
+                            className="bg-slate-50 dark:bg-slate-900/40 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                          >
+                            {/* Order Card Header */}
+                            <div className="p-4 bg-slate-100/60 dark:bg-slate-800/40 border-b border-slate-200/60 dark:border-slate-800/80 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
+                              <div className="space-y-0.5">
+                                <p className="font-bold text-slate-800 dark:text-slate-200">
+                                  Order #SZ-{10000 + Number(order.id)}
+                                </p>
+                                <p className="text-slate-400 font-medium">
+                                  Placed on {new Date(order.createdAt).toLocaleDateString("en-IN", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </p>
+                              </div>
+
+                              <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                                <div>
+                                  <span className="text-slate-400 font-semibold uppercase tracking-wider text-[10px] block text-right">
+                                    Total Amount
+                                  </span>
+                                  <span className="font-extrabold text-sm text-slate-900 dark:text-slate-100">
+                                    ₹{order.totalAmount.toLocaleString("en-IN")}
+                                  </span>
+                                </div>
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-900/50 text-[10px] font-bold text-green-600 dark:text-green-400 uppercase tracking-wide">
+                                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                                  {order.status}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Order Details Body */}
+                            <div className="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 text-xs">
+                              {/* Left: Items list */}
+                              <div className="md:col-span-8 space-y-3">
+                                {order.items.map((item, idx) => (
+                                  <div key={idx} className="flex gap-3 items-center">
+                                    <img
+                                      src={item.image}
+                                      alt={item.title}
+                                      className="w-11 h-11 rounded-xl object-cover border border-slate-200/60 dark:border-slate-800/80 flex-shrink-0"
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                      <p className="font-bold truncate text-slate-800 dark:text-slate-200">
+                                        {item.title}
+                                      </p>
+                                      <p className="text-slate-400 font-medium mt-0.5">
+                                        Qty: {item.quantity} · ₹{item.price.toLocaleString("en-IN")}
+                                      </p>
+                                    </div>
+                                    <p className="font-bold text-slate-800 dark:text-slate-200 self-center flex-shrink-0">
+                                      ₹{(item.price * item.quantity).toLocaleString("en-IN")}
+                                    </p>
+                                  </div>
+                                ))}
+                              </div>
+
+                              {/* Right: Shipping & Payment summary */}
+                              <div className="md:col-span-4 p-3 bg-white dark:bg-[#131c2e] rounded-xl border border-slate-200/50 dark:border-slate-800/60 space-y-2">
+                                <div>
+                                  <span className="font-bold text-slate-400 text-[10px] uppercase tracking-wider block">
+                                    Delivery Address
+                                  </span>
+                                  <p className="text-slate-700 dark:text-slate-300 font-medium mt-0.5 leading-relaxed">
+                                    {order.address}
+                                  </p>
+                                </div>
+                                <div className="pt-2 border-t border-slate-100 dark:border-slate-800/60 flex justify-between">
+                                  <div>
+                                    <span className="font-bold text-slate-400 text-[10px] uppercase tracking-wider block">
+                                      Payment Method
+                                    </span>
+                                    <span className="text-slate-700 dark:text-slate-300 font-bold mt-0.5">
+                                      {order.paymentMethod}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
 

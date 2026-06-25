@@ -214,7 +214,9 @@ function Cart() {
                       </p>
                     )}
                   </div>
-                  <button className="w-full bg-amber-400 hover:bg-amber-500 text-gray-900 font-bold py-3 rounded-xl mt-6 transition-colors shadow-md hover:shadow-lg cursor-pointer text-sm">
+                  <button
+                    onClick={() => navigate("/checkout")}
+                    className="w-full bg-amber-400 hover:bg-amber-500 text-gray-900 font-bold py-3 rounded-xl mt-6 transition-colors shadow-md hover:shadow-lg cursor-pointer text-sm">
                     Proceed to Checkout
                   </button>
                   <button onClick={() => navigate("/products")}
