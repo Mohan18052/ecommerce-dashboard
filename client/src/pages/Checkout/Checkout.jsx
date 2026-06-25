@@ -212,21 +212,21 @@ function Checkout() {
       <main className="w-full px-4 sm:px-6 lg:px-8 py-8 bg-gray-50 dark:bg-gray-900 min-h-screen text-gray-900 dark:text-gray-100">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-extrabold tracking-tight">Checkout</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <div className="mb-10 pb-6 border-b border-gray-200 dark:border-gray-800">
+            <h1 className="text-4xl font-black tracking-tight text-gray-900 dark:text-white">Checkout</h1>
+            <p className="text-base text-gray-500 dark:text-gray-400 mt-2">
               Please review your details and select a payment method.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
             {/* Left Column - Details & Payment */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-7 space-y-8">
               
               {/* Shipping Information Card */}
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
-                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <span className="text-lg bg-amber-100 dark:bg-amber-900/40 text-amber-600 p-1.5 rounded-lg">📦</span>
+              <div className="bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                <h2 className="text-xl font-bold mb-6 flex items-center gap-3">
+                  <span className="text-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 p-2 rounded-xl shadow-inner">📦</span>
                   Shipping & Contact Details
                 </h2>
 
@@ -300,9 +300,9 @@ function Checkout() {
               </div>
 
               {/* Payment Method Card */}
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
-                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <span className="text-lg bg-amber-100 dark:bg-amber-900/40 text-amber-600 p-1.5 rounded-lg">💳</span>
+              <div className="bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                <h2 className="text-xl font-bold mb-6 flex items-center gap-3">
+                  <span className="text-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 p-2 rounded-xl shadow-inner">💳</span>
                   Select Payment Method
                 </h2>
 
@@ -424,26 +424,28 @@ function Checkout() {
             </div>
 
             {/* Right Column - Order Summary */}
-            <div className="lg:col-span-1">
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm sticky top-20">
-                <h3 className="text-lg font-bold mb-4">Order Review</h3>
+            <div className="lg:col-span-5">
+              <div className="bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-xl sticky top-24">
+                <h3 className="text-2xl font-extrabold mb-6 flex items-center gap-2">
+                  <span className="text-xl">🧾</span> Order Review
+                </h3>
 
                 {/* Mini Item List */}
-                <div className="max-h-48 overflow-y-auto mb-4 pr-1 space-y-3 border-b border-gray-100 dark:border-gray-700/60 pb-4">
+                <div className="max-h-72 overflow-y-auto mb-6 pr-2 space-y-5 border-b border-gray-100 dark:border-gray-700/60 pb-6">
                   {cartItems.map((item) => (
-                    <div key={item.id} className="flex gap-3 text-sm">
+                    <div key={item.id} className="flex gap-4">
                       <img
                         src={item.image}
                         alt={item.title}
-                        className="w-10 h-10 rounded-lg object-cover flex-shrink-0 border border-gray-100 dark:border-gray-700"
+                        className="w-16 h-16 rounded-xl object-cover flex-shrink-0 border border-gray-100 dark:border-gray-700 shadow-sm"
                       />
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-xs truncate">{item.title}</p>
-                        <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">
-                          Qty: {item.quantity} · ₹{item.price.toLocaleString("en-IN")}
+                      <div className="flex-1 min-w-0 flex flex-col justify-center">
+                        <p className="font-bold text-sm text-gray-900 dark:text-white line-clamp-2">{item.title}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          Qty: {item.quantity} × ₹{item.price.toLocaleString("en-IN")}
                         </p>
                       </div>
-                      <p className="font-bold text-xs flex-shrink-0 self-center">
+                      <p className="font-extrabold text-sm flex-shrink-0 self-center text-gray-900 dark:text-white">
                         ₹{(item.price * item.quantity).toLocaleString("en-IN")}
                       </p>
                     </div>
@@ -451,27 +453,29 @@ function Checkout() {
                 </div>
 
                 {/* Calculations */}
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between text-gray-600 dark:text-gray-300">
+                <div className="space-y-4 text-base">
+                  <div className="flex justify-between text-gray-600 dark:text-gray-300 font-medium">
                     <span>Items ({cartCount})</span>
                     <span>₹{cartTotal.toLocaleString("en-IN")}</span>
                   </div>
                   {discount > 0 && (
-                    <div className="flex justify-between text-green-600">
+                    <div className="flex justify-between text-green-600 font-medium">
                       <span>Discount (5%)</span>
                       <span>−₹{discount.toLocaleString("en-IN")}</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-gray-600 dark:text-gray-300">
+                  <div className="flex justify-between text-gray-600 dark:text-gray-300 font-medium">
                     <span>Shipping</span>
-                    <span className={shipping === 0 ? "text-green-600 font-medium" : ""}>
+                    <span className={shipping === 0 ? "text-green-600 font-bold tracking-wide" : ""}>
                       {shipping === 0 ? "FREE" : `₹${shipping}`}
                     </span>
                   </div>
-                  <hr className="border-gray-200 dark:border-gray-700" />
-                  <div className="flex justify-between text-lg font-bold">
-                    <span>Total</span>
-                    <span>₹{finalTotal.toLocaleString("en-IN")}</span>
+                  
+                  <div className="pt-4 mt-2 border-t border-dashed border-gray-300 dark:border-gray-700">
+                    <div className="flex justify-between items-center text-xl font-black text-gray-900 dark:text-white">
+                      <span>Total</span>
+                      <span>₹{finalTotal.toLocaleString("en-IN")}</span>
+                    </div>
                   </div>
                 </div>
 
@@ -483,7 +487,7 @@ function Checkout() {
                 <button
                   type="submit"
                   disabled={paymentProcessing || isPlacingOrder}
-                  className="w-full bg-amber-400 hover:bg-amber-500 text-gray-900 disabled:opacity-55 font-bold py-3.5 rounded-xl mt-6 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer text-sm"
+                  className="w-full bg-amber-400 hover:bg-amber-500 text-gray-900 disabled:opacity-55 font-extrabold py-4 rounded-xl mt-8 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer text-base uppercase tracking-wider"
                 >
                   {paymentProcessing ? (
                     <>
@@ -504,9 +508,9 @@ function Checkout() {
                   type="button"
                   onClick={() => navigate("/cart")}
                   disabled={paymentProcessing || isPlacingOrder}
-                  className="w-full text-gray-500 dark:text-gray-400 text-xs font-semibold mt-4 hover:underline cursor-pointer text-center block disabled:opacity-55"
+                  className="w-full text-gray-500 dark:text-gray-400 text-sm font-bold mt-5 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer text-center block disabled:opacity-55"
                 >
-                  Return to Cart
+                  ← Return to Cart
                 </button>
               </div>
             </div>
