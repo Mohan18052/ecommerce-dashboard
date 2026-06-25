@@ -1,14 +1,15 @@
-import { memo, useCallback } from "react";
+import { memo, useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../features/cart/cartSlice";
 import { useAddWishlistItemMutation } from "../../features/wishlist/wishlistApi";
 import StarRating from "../StarRating/StarRating";
 
-function ProductCard({ product }) {
+function ProductCard({ product, onImageError }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [addWishlistItem] = useAddWishlistItemMutation();
+  const [imgError, setImgError] = useState(false);
 
   const handleViewDetails = useCallback(() => {
     navigate(`/products/${product.id}`);
@@ -32,9 +33,13 @@ function ProductCard({ product }) {
       {/* Product Image */}
       <div className="relative w-full overflow-hidden bg-gray-100 dark:bg-gray-900 aspect-square flex-shrink-0">
         <img
-          src={product.image}
+          src={imgError ? "https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=500&auto=format&fit=crop" : product.image}
           alt={product.title}
           loading="lazy"
+          onError={() => {
+            setImgError(true);
+            if (onImageError) onImageError(product.id);
+          }}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
         />
 

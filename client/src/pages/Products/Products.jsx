@@ -10,8 +10,18 @@ import { useGetProductsQuery } from "../../features/products/productsApi";
 import useDebounce from "../../hooks/useDebounce";
 import useInfiniteScroll from "../../hooks/useInfiniteScroll";
 
+const globalBrokenImages = new Set();
+
 function Products() {
   const { data = [], isLoading, error } = useGetProductsQuery(undefined, { pollingInterval: 30000 });
+  const [brokenImages, setBrokenImages] = useState(globalBrokenImages);
+
+  const handleImageError = useCallback((id) => {
+    if (!globalBrokenImages.has(id)) {
+      globalBrokenImages.add(id);
+      setBrokenImages(new Set(globalBrokenImages));
+    }
+  }, []);
 
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
@@ -76,8 +86,18 @@ function Products() {
     else if (sort === "high-low") products.sort((a, b) => b.price - a.price);
     else if (sort === "rating") products.sort((a, b) => b.rating - a.rating);
     else if (sort === "reviews") products.sort((a, b) => b.reviews - a.reviews);
+
+    // Push products with broken images to the end
+    products.sort((a, b) => {
+      const aBroken = brokenImages.has(a.id);
+      const bBroken = brokenImages.has(b.id);
+      if (aBroken && !bBroken) return 1;
+      if (!aBroken && bBroken) return -1;
+      return 0;
+    });
+
     return products;
-  }, [data, debouncedSearch, category, sort, appliedMin, appliedMax, minRating, inStockOnly, specialFilter, hotDealsIds]);
+  }, [data, debouncedSearch, category, sort, appliedMin, appliedMax, minRating, inStockOnly, specialFilter, hotDealsIds, brokenImages]);
 
   const visibleProducts = useMemo(() => filteredProducts.slice(0, visibleCount), [filteredProducts, visibleCount]);
 
@@ -292,7 +312,7 @@ function Products() {
           )}
 
           {filteredProducts.length > 0 && useVirtualized ? (
-            <VirtualizedList items={filteredProducts} sidebarOpen={sidebarOpen} renderItem={(product) => <ProductCard key={product.id} product={product} />} />
+            <VirtualizedList items={filteredProducts} sidebarOpen={sidebarOpen} renderItem={(product) => <ProductCard key={product.id} product={product} onImageError={handleImageError} />} />
           ) : (
             <>
               {/* Grid fills full width — more columns when sidebar closed */}
@@ -301,7 +321,7 @@ function Products() {
                   ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
                   : "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
               }`}>
-                {visibleProducts.map((product) => <ProductCard key={product.id} product={product} />)}
+                {visibleProducts.map((product) => <ProductCard key={product.id} product={product} onImageError={handleImageError} />)}
               </div>
 
               {/* Loading spinner */}
