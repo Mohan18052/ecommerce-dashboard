@@ -43,6 +43,9 @@ const Profile = lazy(() =>
   import("../pages/Profile/Profile")
 );
 
+const ForgotPassword = lazy(() => import("../pages/ForgotPassword/ForgotPassword"));
+const ResetPassword  = lazy(() => import("../pages/ResetPassword/ResetPassword"));
+
 function PageLoader() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
@@ -123,6 +126,9 @@ function AppRouter() {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password"  element={<ResetPassword />} />
 
         </Routes>
       </Suspense>
