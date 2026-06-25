@@ -264,23 +264,24 @@ function Dashboard() {
                 One-stop destination for premium tech — mobiles, laptops, audio, gaming, and more.
               </p>
 
-              {/* Subscribe box */}
-              <p className="text-[10px] font-bold tracking-widest uppercase mb-2.5" style={{ color:"rgba(251,191,36,0.7)" }}>Subscribe</p>
-              <div className="flex gap-2 mb-4">
-                <input
-                  type="email"
-                  placeholder="Email address"
-                  className="flex-1 text-xs px-3 py-2 rounded-lg outline-none"
-                  style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", color:"#fff", minWidth:0 }}
-                />
-                <button
-                  className="text-xs font-bold px-3 py-2 rounded-lg cursor-pointer transition-all"
-                  style={{ background:"#fbbf24", color:"#0a0a0f" }}
-                  onMouseEnter={e => e.currentTarget.style.background="#f59e0b"}
-                  onMouseLeave={e => e.currentTarget.style.background="#fbbf24"}
-                >
-                  Subscribe
-                </button>
+              {/* Contact section moved here */}
+              <p className="text-[10px] font-bold tracking-widest uppercase mb-3" style={{ color:"rgba(251,191,36,0.7)" }}>Contact</p>
+              <div className="flex flex-col gap-2">
+                {[
+                  { icon:"🔗", label:"Connect",          href:"#"                              },
+                  { icon:"💬", label:"Live Chat",         href:"#"                              },
+                  { icon:"📞", label:"Customer Service",  href:"#"                              },
+                  { icon:"✉️", label:"support@shopzone.com", href:"mailto:support@shopzone.com" },
+                ].map(({ icon, label, href }) => (
+                  <a key={label} href={href}
+                    className="flex items-center gap-2 text-xs transition-colors duration-150 no-underline"
+                    style={{ color:"rgba(255,255,255,0.45)", textDecoration:"none" }}
+                    onMouseEnter={e => e.currentTarget.style.color="#fbbf24"}
+                    onMouseLeave={e => e.currentTarget.style.color="rgba(255,255,255,0.45)"}
+                  >
+                    <span className="text-sm">{icon}</span> {label}
+                  </a>
+                ))}
               </div>
             </div>
 
@@ -371,25 +372,6 @@ function Dashboard() {
                 ))}
               </div>
 
-              {/* Contact */}
-              <p className="text-[10px] font-bold tracking-widest uppercase mb-3" style={{ color:"rgba(251,191,36,0.7)" }}>Contact</p>
-              <div className="flex flex-col gap-2">
-                {[
-                  { icon:"🔗", label:"Connect",          href:"#"                              },
-                  { icon:"💬", label:"Live Chat",         href:"#"                              },
-                  { icon:"📞", label:"Customer Service",  href:"#"                              },
-                  { icon:"✉️", label:"support@shopzone.com", href:"mailto:support@shopzone.com" },
-                ].map(({ icon, label, href }) => (
-                  <a key={label} href={href}
-                    className="flex items-center gap-2 text-xs transition-colors duration-150 no-underline"
-                    style={{ color:"rgba(255,255,255,0.45)", textDecoration:"none" }}
-                    onMouseEnter={e => e.currentTarget.style.color="#fbbf24"}
-                    onMouseLeave={e => e.currentTarget.style.color="rgba(255,255,255,0.45)"}
-                  >
-                    <span className="text-sm">{icon}</span> {label}
-                  </a>
-                ))}
-              </div>
             </div>
 
           </div>
