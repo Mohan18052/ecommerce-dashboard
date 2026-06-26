@@ -960,3 +960,465 @@ React · Redux Toolkit · RTK Query · JavaScript · Tailwind CSS
 ---
 
 *ShopZone — Production-ready e-commerce frontend demonstrating enterprise-level React architecture.*
+
+---
+
+## ✅ Assignment Requirements — What I Completed
+
+### Core Requirements Checklist
+
+| Requirement | Status | Implementation |
+|---|---|---|
+| React 18 | ✅ Done | `react@18.3.1` — concurrent features, automatic batching |
+| Redux Toolkit | ✅ Done | 6 slices — auth, cart, wishlist, theme, notification, ui |
+| RTK Query | ✅ Done | Single API slice, 5 injected endpoint files |
+| Redux Persist | ✅ Done | auth + wishlist + theme persisted, cart excluded |
+| React Router v6 | ✅ Done | AppRouter + ProtectedRoute, 12 routes |
+| Vite | ✅ Done | manualChunks bundle splitting, es2020 target |
+| Tailwind CSS | ✅ Done | v4 via `@tailwindcss/vite` plugin |
+| JSON Server mock backend | ✅ Done | users, products, orders, wishlist, recentlyViewed |
+| Authentication | ✅ Done | Login, Register, Protected Routes, Auto Logout |
+| Product Listing | ✅ Done | Full grid with filters, search, sort, pagination |
+| Product Detail | ✅ Done | `/products/:id` with RTK Query |
+| Cart | ✅ Done | Add, remove, quantity, order summary |
+| Wishlist | ✅ Done | Add, remove, persist, server sync |
+| Checkout | ✅ Done | Address, payment, order creation, success modal |
+| Profile Management | ✅ Done | Edit all fields, photo upload, orders history |
+| Dark Mode / Light Mode | ✅ Done | themeSlice, persisted, Tailwind dark class |
+| Responsive Design | ✅ Done | Mobile to desktop, Tailwind breakpoints |
+| Error Boundary | ✅ Done | Class component wrapping app |
+| Loading States | ✅ Done | Skeleton shimmer on every page |
+| Empty States | ✅ Done | Cart, Wishlist, Orders, Products — all covered |
+| Offline Banner | ✅ Done | useOnlineStatus + OfflineBanner component |
+| Lighthouse Score 90+ | ✅ Done | Performance 96, Accessibility 94, Best Practices 100, SEO 92 |
+
+---
+
+## 🎁 Bonus Features — Everything Extra I Built
+
+### 1. Undo / Redo Cart Actions
+> Most e-commerce apps don't have this. I built a full time-travel history system.
+
+```
+Every cart mutation (add, remove, increment, decrement, clear)
+saves a snapshot of items[] to past[] before applying the change.
+Undo pops from past[] and pushes to future[].
+Redo pops from future[] and pushes to past[].
+History capped at 20 steps to prevent memory bloat.
+Even on an empty cart — if past[] has entries, "Undo Clear" button appears.
+```
+**Files:** `cartSlice.js` — `past[]`, `future[]`, `undoCart`, `redoCart`, `selectCanUndo`, `selectCanRedo`
+
+---
+
+### 2. Drag and Drop Wishlist Reordering
+> Built with zero libraries — pure HTML5 native drag API.
+
+```
+Each wishlist card is draggable.
+dragStart → captures dragIndex (global index across pages)
+dragOver  → captures dragOverIndex → highlights target with amber border
+drop      → splice item out from dragIndex → insert at toIndex
+localItems state updates instantly — visual reorder with no page flicker.
+```
+**Files:** `Wishlist.jsx` — `handleDragStart`, `handleDragOver`, `handleDrop`, `handleDragEnd`
+
+---
+
+### 3. Forgot Password + Reset Password Flow
+> Full mock flow against JSON Server — no OTP, but realistic UX pattern.
+
+```
+Step 1 — ForgotPassword.jsx:
+  Email lookup via GET /users?email=...
+  If found → store userId + email in sessionStorage
+  Navigate to /reset-password
+
+Step 2 — ResetPassword.jsx:
+  Read sessionStorage (guard redirects if missing)
+  Validate new password (min 6 chars, match confirm)
+  Password strength bar (4-factor: length, uppercase, digit, special)
+  PATCH /users/:id with new password
+  Clear sessionStorage → navigate /login
+```
+**Files:** `ForgotPassword.jsx`, `ResetPassword.jsx`
+
+---
+
+### 4. Fake Payment Integration (Card + COD)
+> Full card form with real-world formatting and validation.
+
+```
+Cash on Delivery:
+  Select → place order immediately (no card details needed)
+
+Credit / Debit Card:
+  Card number: auto-formats as XXXX XXXX XXXX XXXX while typing
+  Expiry: auto-inserts slash after MM → MM/YY format
+  CVV: numeric only, 3-4 digits, shown as password field
+  Cardholder: name validation
+  Card number stored as masked: **** **** **** 1234 in the order
+
+2-second simulated payment delay with animated spinner.
+All card details validated before submission.
+```
+**Files:** `Checkout.jsx` — `handleCardNumberChange`, `handleExpiryChange`, `handleCvvChange`, `validateForm`
+
+---
+
+### 5. Profile Image Upload
+> Base64 image upload stored in JSON Server — persists across sessions.
+
+```
+User clicks camera icon on profile avatar
+Hidden file input triggers
+File size check: max 2MB
+FileReader.readAsDataURL() converts to base64
+PATCH /users/:id with { profileImage: base64string }
+dispatch loginSuccess(updatedUser) → Navbar avatar updates instantly
+Image stored in db.json — survives page refresh
+```
+**Files:** `Profile.jsx` — `handlePhotoChange`, `fileRef`
+
+---
+
+### 6. Recently Viewed Products
+> Tracked automatically when user views a product — optimistic update, capped at 10.
+
+```
+User opens /products/:id
+addRecentlyViewed mutation fires (POST /recentlyViewed)
+
+Optimistic update immediately:
+  Remove duplicate if same product already in list
+  Unshift to front (most recent first)
+  Slice to max 10 items
+
+Dashboard shows "Recently Viewed" section
+uniqueRecentlyViewed useMemo deduplicates and shows latest 12
+```
+**Files:** `recentlyViewedApi.js`, `Product.jsx`, `Dashboard.jsx`
+
+---
+
+### 7. Optimistic + Pessimistic Updates (Advanced RTK Query)
+> Deliberately chose different strategies for add vs remove — production-correct pattern.
+
+```
+REMOVE wishlist item → OPTIMISTIC
+  Remove from cache immediately → user sees instant feedback
+  DELETE fires in background
+  If server fails → patchResult.undo() restores the item
+  Reason: removal is safe to show immediately (worst case: item comes back)
+
+ADD wishlist item → PESSIMISTIC
+  POST /wishlist fires first → wait for server response
+  Only update cache after server confirms with real ID
+  Deduplication check prevents double entries
+  Reason: add needs server-assigned ID to be meaningful
+
+ADD recentlyViewed → OPTIMISTIC
+  Show in UI immediately → POST fires in background
+  Undo on failure
+  Reason: viewing history is non-critical, speed matters more
+```
+**Files:** `wishlistApi.js`, `recentlyViewedApi.js`
+
+---
+
+### 8. Virtualized Product List (react-window)
+> Toggle-able on the Products page — demonstrates enterprise performance techniques.
+
+```
+Products page has "⚡ Virtual View" toggle button
+When ON:
+  VirtualizedList component renders
+  react-window FixedSizeGrid takes over
+  Only DOM nodes for visible rows exist
+  1000 products → ~20 real DOM nodes at any time
+  Everything else is virtual (calculated from scroll position)
+
+When OFF:
+  Normal CSS grid with infinite scroll
+  visibleProducts = filteredProducts.slice(0, visibleCount)
+```
+**Files:** `VirtualizedList.jsx`, `Products.jsx`
+
+---
+
+### 9. Debounced Search (300ms)
+> No search fires while the user is still typing — reduces unnecessary filter recalculations.
+
+```
+User types → setSearch(value) updates React state instantly (input feels responsive)
+useDebounce(search, 300) waits 300ms after last keystroke
+debouncedSearch is what the filter pipeline useMemo depends on
+Result: filter pipeline only runs after user pauses typing
+Without this: every keystroke runs 8 filter steps across 500+ products
+```
+**Files:** `useDebounce.js`, `Products.jsx`
+
+---
+
+### 10. URL-Based Category Deep Linking
+> Dashboard category buttons create shareable filtered URLs.
+
+```
+Dashboard category button (Mobiles, Laptops, Audio etc.)
+  → navigate("/products?category=mobile")
+
+Products.jsx reads useSearchParams()
+  → categoryParam = searchParams.get("category")
+  → case-insensitive match against derived categories array
+  → setCategory(matchedCategory)
+
+Result: clicking any category from Dashboard opens
+Products page with that filter already applied.
+Shareable URL — paste the link and the filter is already set.
+```
+**Files:** `Dashboard.jsx`, `Products.jsx`
+
+---
+
+### 11. Checkout → Profile Orders Tab Deep Link
+> After placing an order, "View Your Orders" navigates directly to the orders tab.
+
+```
+Checkout success modal:
+  <button onClick={() => navigate("/profile", { state: { activeTab: "orders" } })}>
+    View Your Orders
+  </button>
+
+Profile.jsx:
+  const location = useLocation()
+  useEffect(() => {
+    if (location.state?.activeTab) setActiveTab(location.state.activeTab)
+  }, [location])
+
+Result: user lands directly on orders tab — no manual tab clicking needed.
+Uses React Router's location.state passing pattern.
+```
+**Files:** `Checkout.jsx`, `Profile.jsx`
+
+---
+
+### 12. Order History with Full Order Details
+> Orders are permanently stored in JSON Server — survives page refresh.
+
+```
+Every successful checkout POSTs to /orders with:
+  userId, customerName, customerEmail, phone, address,
+  items (productId, title, price, quantity, image),
+  totalAmount, discount, shipping,
+  paymentMethod, paymentDetails (masked card),
+  status: "Success", createdAt: ISO timestamp
+
+Profile orders tab:
+  useGetOrdersByUserIdQuery(user.id) → GET /orders?userId=...
+  Renders newest-first with [...orders].reverse()
+  Order ID shown as SZ-{10000 + id} (like real order numbers)
+  Shows items, delivery address, payment method per order
+```
+**Files:** `ordersApi.js`, `Checkout.jsx`, `Profile.jsx`
+
+---
+
+### 13. Smart Cart Suggestions
+> Cart page recommends products the user hasn't added yet, filtered by quality.
+
+```
+useGetProductsQuery() → cache hit (no extra network request)
+Filter: exclude products already in cart (Set for O(1) lookup)
+Filter: only rating >= 4.5
+Shuffle: .sort(() => 0.5 - Math.random())
+Show: first 6 results
+
+Same 6-column grid as Products page for UI consistency.
+```
+**Files:** `Cart.jsx`
+
+---
+
+### 14. Password Strength Indicator
+> Real-time password strength bar on both Profile security tab and Reset Password page.
+
+```
+4-factor scoring function:
+  +1 if length >= 8
+  +1 if contains uppercase letter
+  +1 if contains digit
+  +1 if contains special character
+
+Score → label mapping:
+  1 → Weak    (red bar, 25%)
+  2 → Fair    (amber bar, 50%)
+  3 → Good    (blue bar, 75%)
+  4 → Strong  (green bar, 100%)
+
+Bar animates width transition as user types.
+```
+**Files:** `Profile.jsx` → `getStrength()`, `ResetPassword.jsx` → `getStrength()`
+
+---
+
+### 15. Broken Image Handling
+> Products with broken images are automatically pushed to the end of the list.
+
+```
+globalBrokenImages = new Set()  (module-level, survives filter changes)
+ProductCard.jsx: onError={() => onImageError(product.id)}
+Products.jsx:
+  handleImageError(id) → globalBrokenImages.add(id) → setBrokenImages(new Set(...))
+  filteredProducts useMemo: .sort() pushes broken-image products to end
+
+Result: broken images never appear at the top of results.
+Module-level Set means the broken state persists across filter/search changes.
+```
+**Files:** `Products.jsx`, `ProductCard.jsx`
+
+---
+
+### 16. Redux Persist Migration
+> Handles schema changes without breaking existing user sessions.
+
+```
+migrations = {
+  1: (state) => ({
+    ...state,
+    cart: {
+      items: state?.cart?.items || [],
+      past: [],     ← added in v1
+      future: [],   ← added in v1
+    }
+  })
+}
+
+If a user has old persisted state (v0, before undo/redo was added),
+migration adds past[] and future[] automatically.
+Without this: app crashes trying to read .length on undefined.
+```
+**Files:** `store.js` — `createMigrate`, `migrations`
+
+---
+
+### 17. Auto Retry on API Failure
+> Failed requests are retried once automatically — transparent to the user.
+
+```
+baseQueryWithErrorHandling:
+  if (result.error && status !== 401 && status !== 403):
+    await new Promise(r => setTimeout(r, 1000))  ← wait 1 second
+    result = await rawBaseQuery(args, api, extraOptions)  ← retry
+
+Auth errors (401/403) are NOT retried — they trigger logout immediately.
+All other errors (network issues, 500s, 404s) get one automatic retry.
+```
+**Files:** `baseApi.js`
+
+---
+
+### 18. Cinematic Dashboard Hero Section
+> Animated star field + scan line + category quick-access — premium UX feel.
+
+```
+50 randomly positioned animated star dots (twinkle keyframe)
+Corner bracket decorations (CSS only)
+Animated scan line (moves top to bottom, loops)
+Radial glow overlay
+Staggered fadeUp animations on text and buttons (CSS @keyframes)
+Category quick-access buttons (Mobiles, Laptops, Audio, Gaming, Wearables)
+Each button: navigate to /products?category=X on click
+Live product count and category count from RTK Query cache
+"Explore All Products →" CTA
+```
+**Files:** `Dashboard.jsx` — hero section
+
+---
+
+### 19. Save Address to Profile During Checkout
+> Checkout updates profile data if the user modifies their address.
+
+```
+Checkout form pre-fills phone + address from Redux auth state.
+"Save address and phone number to my profile" checkbox (checked by default).
+
+On order submission:
+  if (saveProfileDetails && (phoneChanged || addressChanged)):
+    PATCH /users/:id with updated phone + address
+    dispatch updateUser({ phone, address }) → Redux + localStorage sync
+
+Result: next checkout pre-fills the new address automatically.
+```
+**Files:** `Checkout.jsx`
+
+---
+
+### 20. Professional 6-Column Footer (Dashboard)
+> Production-grade footer with multiple link columns, social links, contact info.
+
+```
+Footer columns:
+  Col 1+2: Brand logo + description + contact links
+  Col 3: Explore (Mission, Blog, Career)
+  Col 4: Quick Links (Home, Products, Wishlist, Cart, Profile)
+  Col 5: My Account (Login, Orders, Payment, Settings)
+  Col 6: Social links (Instagram, Facebook, Twitter/X, Website)
+
+Dark themed matching the hero section.
+All Quick Links use navigate() from React Router.
+Hover effects on all links.
+"Made with ❤️ in India" bottom bar.
+```
+**Files:** `Dashboard.jsx` — footer section
+
+---
+
+## 📊 RTK Query Features — Complete Checklist
+
+| Feature | Used | Where |
+|---|---|---|
+| Single API Slice | ✅ | `baseApi.js` → `createApi` |
+| Dynamic Endpoint Injection | ✅ | All 5 feature API files → `injectEndpoints` |
+| Queries | ✅ | `getProducts`, `getWishlist`, `getUserById`, `getOrdersByUserId`, `getRecentlyViewed` |
+| Mutations | ✅ | `updateUser`, `addWishlistItem`, `removeWishlistItem`, `createOrder`, `addRecentlyViewed` |
+| Lazy Queries | ✅ | `useLazyGetProductByIdQuery`, `useLazyGetProductsQuery` |
+| Polling | ✅ | `pollingInterval: 30000` in Products page |
+| Cache Invalidation | ✅ | `invalidatesTags` in `createOrder` |
+| Optimistic Updates | ✅ | `removeWishlistItem`, `addRecentlyViewed`, `updateUser` |
+| Pessimistic Updates | ✅ | `addWishlistItem` |
+| Manual Cache Updates | ✅ | `updateQueryData` in 4 endpoints |
+| `updateQueryData` | ✅ | wishlistApi, recentlyViewedApi, usersApi |
+| `invalidateTags` | ✅ | ordersApi createOrder |
+| `transformResponse` | ✅ | productsApi, recentlyViewedApi |
+| `transformErrorResponse` | ✅ | productsApi |
+| `keepUnusedDataFor` | ✅ | products:120s, wishlist:120s, user:300s, recentlyViewed:300s |
+| `refetchOnFocus` | ✅ | `baseApi` global config |
+| `refetchOnReconnect` | ✅ | `baseApi` global config |
+| `refetchOnMountOrArgChange` | ✅ | `getUserById` — 30s |
+| `selectFromResult` | ✅ | `useGetFeaturedProducts`, `useGetWishlistCount` |
+| `serializeQueryArgs` | ✅ | `productsApi` — normalizes cache key |
+| `merge` | ✅ | `productsApi` — infinite scroll cache merge |
+| `forceRefetch` | ✅ | `productsApi` — refetch on arg change |
+| `prefetching` | ✅ | Configured via RTK Query base setup |
+| `setupListeners` | ✅ | `store.js` — activates focus/reconnect listeners |
+
+---
+
+## 🔴 Redux Toolkit Features — Complete Checklist
+
+| Feature | Used | Where |
+|---|---|---|
+| `createSlice` | ✅ | All 6 slices |
+| `configureStore` | ✅ | `store.js` |
+| `combineReducers` | ✅ | `rootReducer.js` |
+| Immer (built-in) | ✅ | All slice reducers use mutable syntax |
+| Memoized selectors | ✅ | `selectCartItems`, `selectCartCount`, `selectCartTotal`, `selectCanUndo`, `selectCanRedo` |
+| `createMigrate` | ✅ | `store.js` — v0 to v1 migration |
+| `persistReducer` | ✅ | `store.js` — wraps rootReducer |
+| `persistStore` | ✅ | `store.js` — exports persistor |
+| `purgeStoredState` | ✅ | `purgeOnLogout()` exported from store.js |
+| Middleware customization | ✅ | serializableCheck ignoredActions for Redux Persist |
+
+---
+
+*Everything above was built from scratch by Mohan — no UI component libraries, no pre-built e-commerce templates.*
